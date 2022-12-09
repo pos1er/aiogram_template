@@ -11,8 +11,6 @@ from keyboards.inline.user import delete_me
 from loader import dp, bot
 from mongodb import Admins
 from states.admin import AdminStates
-from data.config import languages
-import gettext
 
 
 router = Router()
@@ -36,9 +34,7 @@ async def database_default(message: Message):
 @dp.message(Command("admin"))
 async def database_default(message: Message, state: FSMContext):
     await state.clear()
-    languages['ru'].install()
-    _ = gettext.gettext
-    text_menu = _('admin_start')
+    text_menu = '123123'
 #     text_menu = f'''<u>Вход прошел успешно</u>\n
 # <b>Добро пожаловать, {message.from_user.full_name}</b>'''
     await state.set_state(AdminStates.admin)

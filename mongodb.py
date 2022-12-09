@@ -11,8 +11,6 @@ import time
 import aiohttp
 import json
 
-from tiktok_downloader import snaptik
-
 mdb = MongoClient(mongodb_url)
 admins = mdb.get_database()["admins"]
 users = mdb.get_database()["users"]
