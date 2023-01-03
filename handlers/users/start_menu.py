@@ -3,9 +3,9 @@ from aiogram.filters import CommandStart, Text, StateFilter, Command
 from aiogram.types import Message, CallbackQuery, ContentType, InputMediaVideo, InputFile, InputMediaPhoto, URLInputFile, BufferedInputFile
 from aiogram import html, Router
 
-from app.misc.filename_utils import generate_captcha_image_filename
-from app.misc.kb_generators import generate_captcha_keyboard
-from app.services.captcha import CaptchaService
+# from app.misc.filename_utils import generate_captcha_image_filename
+# from app.misc.kb_generators import generate_captcha_keyboard
+# from app.services.captcha import CaptchaService
 
 from filters.private_chat import IsPrivate
 from filters.is_url import IsUrl
