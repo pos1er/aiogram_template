@@ -2,6 +2,5 @@ aiogram==3.0.0b6
 aiohttp
 pymongo
 datetime
-io
 time
 asyncio
