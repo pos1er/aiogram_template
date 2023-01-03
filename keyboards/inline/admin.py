@@ -9,5 +9,8 @@ admin_menu = InlineKeyboardMarkup(inline_keyboard=[
     ],
     [
         InlineKeyboardButton(text="💼 Управление", callback_data="management")
+    ],
+    [
+        InlineKeyboardButton(text="⚙️ Настройки", callback_data="settings")
     ]
 ])

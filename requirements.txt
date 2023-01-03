@@ -129,7 +129,6 @@ pycares==4.2.2
 pycodestyle==2.9.1
 pycountry==22.1.10
 pycparser==2.21
-pyCryptoPayAPI @ git+https://github.com/LulzLoL231/pyCryptoPayAPI.git@2f7f3f9137eaedc8d9c4ccd97c55ef188efe6d86
 pydantic==1.10.2
 pyee==8.2.2
 pyfiglet==0.8.post1

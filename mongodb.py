@@ -5,13 +5,13 @@ from xmlrpc.client import Boolean
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputFile, User
 from pymongo import MongoClient
-from CryptoPayAPI import CryptoPay, types
 from data.config import mongodb_url, crystal_pay_key, crypto_bot_key, private_key_payid19, public_key_payid19
 import time
 import aiohttp
 import json
 
 mdb = MongoClient(mongodb_url)
+db_data = mdb.get_database()["db_data"]
 admins = mdb.get_database()["admins"]
 users = mdb.get_database()["users"]
 payments = mdb.get_database()["payments"]
@@ -99,14 +99,25 @@ class Payments:
     
     async def new_crypto_bot(self, request_num, asset):
         asset = asset.upper()
-        amount_value = round(self.amount / float(await Utils().cryptocurrencies_price(asset, 'RUB')), 2)
-        cp = CryptoPay(crypto_bot_key)
-        data = await cp.create_invoice(asset=asset, amount=amount_value, description=f'#{request_num} | Пополнение баланса @{self.bot_username} для ID[{self.user_id}]',
-                                       hidden_message='Спасибо за оплату!')
-        if data.invoice_id:
-            return data.invoice_id, data.pay_url
+        amount_value = round(self.amount / float(await Utils().cryptocurrencies_price(asset, 'RUB')), 15)
+        print(amount_value)
+        headers = {
+            'Crypto-Pay-API-Token': crypto_bot_key
+        }
+        session = aiohttp.ClientSession(headers=headers)
+        request_data = {
+            'asset': asset,
+            'amount': amount_value,
+            'description': f'#{request_num} | Пополнение баланса @{self.bot_username} для ID[{self.user_id}]',
+            'hidden_message': 'Спасибо за оплату!'
+        }
+        response = await session.post('https://pay.crypt.bot/api/createInvoice', data=request_data)
+        data = await response.json()
+        async with session as close_session: pass
+        if data['ok']:
+            return data['result']['invoice_id'], data['result']['pay_url']
         else:
-            return data.invoice_id, False
+            return request_num, False
     
     async def new_payid19(self, request_num):
         request_data = {
@@ -167,11 +178,22 @@ class Payments:
             return False, None
     
     async def check_crypto_bot(self):
-        cp = CryptoPay(crypto_bot_key)
-        data = await cp.get_invoices(invoice_ids=self.payment_id)
-        if data:
-            if data[0].status == types.InvoiceStatus.PAID:
-                return True
+        headers = {
+            'Crypto-Pay-API-Token': crypto_bot_key
+        }
+        session = aiohttp.ClientSession(headers=headers)
+        request_data = {
+            'offset': 0,
+            'count': 100,
+            'invoice_ids': str(self.payment_id)
+        }
+        response = await session.post('https://pay.crypt.bot/api/getInvoices', data=request_data)
+        data = await response.json()
+        async with session as close_session: pass
+        if data['result']['items']:
+            return True, data[0]
+        else:
+            return False, None
 
 
 class ForFilters:
@@ -183,10 +205,14 @@ class ForFilters:
         return admins.find_one({'user_id': self.user_id, 'type': admin_type})
     
     async def user_check(self, user_id) -> Coroutine:
+        #  todo: сделать блок по времени
         return users.find_one({'user_id': user_id, 'block': True, 'bot_accept': True}, {'_id': False, 'block': True})
 
     async def get_language(self) -> Coroutine:
-        return users.find_one({'user_id': self.user_id}, {'language': True})
+        return users.find_one({'user_id': self.user_id}, {'_id': False, 'language': True})
+    
+    async def old_user(self) -> Coroutine:
+        return users.find_one({'user_id': self.user_id}, {'_id': False, 'user_id': True})
 
 
 class Admins:
@@ -203,6 +229,17 @@ class Admins:
         }
         admins.drop()
         admins.insert_one(admin)
+        data = {
+            'id': 1,
+            'captcha_status': False,
+            'languages': ['ru', 'en', 'de'],
+            'rights': []
+        }
+        db_data.drop()
+        db_data.insert_one(data)
+    
+    async def update_captcha_status(self, new_status):
+        db_data.update_one({'id': 1}, {'$set': {'captcha_status': new_status}})
 
 
 class Utils:
@@ -222,6 +259,10 @@ class Timers:
 
 class Keyboards:
     ...
+
+class MainGets:
+    async def captcha_status(self):
+        return db_data.find_one({'id': 1})['captcha_status']
 
 class MainEdits:
     ...
