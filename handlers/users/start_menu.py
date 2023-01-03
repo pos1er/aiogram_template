@@ -57,6 +57,7 @@ async def start_menu(message: Message, state: FSMContext, _):
     await state.clear()
     start_text = _('start_text')
     await message.answer(text=start_text)
+    await state.update_data({'a': 'aaaaa'})
 
 
 @router.callback_query(lambda x: x.data in ['en', 'ru'], StateFilter(UserStates.language_choice))
@@ -71,6 +72,8 @@ async def language_choice(callback_query: CallbackQuery, _):
 
 
 @router.message(Command("test"))
-async def start_menu(message: Message, _):
+async def start_menu(message: Message, state: FSMContext, _):
     start_text = _('start_text')
     await bot.send_message(text=start_text, chat_id=message.from_user.id)
+    data = await state.get_data()
+    print(data)
