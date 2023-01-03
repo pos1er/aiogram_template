@@ -54,8 +54,8 @@ async def start_menu(message: Message, state: FSMContext):
 @router.message(CommandStart())
 async def start_menu(message: Message, state: FSMContext, _):
     await state.clear()
-    start_text = _('command_start_old_user')
-    await message.answer(text=start_text, reply_markup=language_menu)
+    start_text = _('start_text')
+    await message.answer(text=start_text)
 
 
 @router.callback_query(lambda x: x.data in ['en', 'ru'], StateFilter(UserStates.language_choice))
