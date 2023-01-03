@@ -25,24 +25,25 @@ router.message.filter(IsPrivate())
 async def start_menu(message: Message, state: FSMContext):
     captcha_status = await MainGets().captcha_status()
     if captcha_status:
-        captcha_data = await CaptchaService.generate_captcha()
-        salt = await CaptchaService.lock_user(
-            chat_id, user_id, correct_code=captcha_data.correct_emoji_code
-        )
-        captcha_text = ("Привет 👋\n"
-            "Выбери <u>правильный вариант</u> в соответствии с заданием на картинке.\n"
-            "Hi 👋\n"
-            "Choose the <u>right option</u> according to the task in the picture.")
-        captcha_kb = generate_captcha_keyboard(
-            chat_id, user_id, salt, emoji_data=captcha_data.emoji_data
-        )
-        captcha_photo = BufferedInputFile(
-            file=captcha_data.image.getvalue(),
-            filename=generate_captcha_image_filename(chat_id, user_id),
-        )
-        await bot.send_photo(
-            user_id, photo=captcha_photo, caption=captcha_text, reply_markup=captcha_kb
-        )
+        print(1)
+        # captcha_data = await CaptchaService.generate_captcha()
+        # salt = await CaptchaService.lock_user(
+        #     chat_id, user_id, correct_code=captcha_data.correct_emoji_code
+        # )
+        # captcha_text = ("Привет 👋\n"
+        #     "Выбери <u>правильный вариант</u> в соответствии с заданием на картинке.\n"
+        #     "Hi 👋\n"
+        #     "Choose the <u>right option</u> according to the task in the picture.")
+        # captcha_kb = generate_captcha_keyboard(
+        #     chat_id, user_id, salt, emoji_data=captcha_data.emoji_data
+        # )
+        # captcha_photo = BufferedInputFile(
+        #     file=captcha_data.image.getvalue(),
+        #     filename=generate_captcha_image_filename(chat_id, user_id),
+        # )
+        # await bot.send_photo(
+        #     user_id, photo=captcha_photo, caption=captcha_text, reply_markup=captcha_kb
+        # )
     else:
         await Users().add_new_user()
         start_text = f'''Welcome, {html.link(html.quote(message.from_user.full_name), f'tg://user?id={message.from_user.id}')}\n

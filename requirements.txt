@@ -3,3 +3,6 @@ aiohttp
 pymongo
 datetime
 asyncio
+redis
+python-dotenv
+cachetools
