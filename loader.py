@@ -6,6 +6,7 @@ from data.config import TOKEN
 
 bot = Bot(token=TOKEN, parse_mode='HTML')
 storage = RedisStorage.from_url('redis://localhost:6379/0')
+#  storage = MemoryStorage()
 loop = asyncio.get_event_loop()
 dp = Dispatcher(storage=storage, loop=loop)
 
