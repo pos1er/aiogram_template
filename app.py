@@ -29,6 +29,7 @@ async def on_startup(bot, webhook_url: str):
     await on_startup_notify(bot)
     await set_default_commands(bot)
     await bot.set_webhook(webhook_url)
+    await bot.get_webhook_info()
 
 
 @main_router.shutdown()
