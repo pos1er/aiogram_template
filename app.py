@@ -16,11 +16,6 @@ logger = logging.getLogger(__name__)
 
 WEBHOOK_URL = f"https://pos1er.com/AAAA"
 
-# You have to guarantee that requests to WEBHOOK_URL are handled by aiohttp webserver.
-# More information about Webhook: https://core.telegram.org/bots/webhooks
-# Webserver settings
-
-
 main_router = Router()
 
 
@@ -35,12 +30,7 @@ async def on_startup(bot, webhook_url: str):
 @main_router.shutdown()
 async def on_shutdown(bot):
     logging.warning("Shutting down..")
-
-    # Insert code here to run it before shutdown
-
-    # Remove webhook (not acceptable in some cases)
     await bot.delete_webhook()
-
     logging.warning("Bye!")
 
 
@@ -48,7 +38,6 @@ def main():
     from handlers import dp
     dp["webhook_url"] = WEBHOOK_URL
     dp.include_router(main_router)
-
     dp.include_router(start_menu.router)
     dp.include_router(admin_panel.router)
     dp.update.outer_middleware(BanAcceptCheck())
@@ -56,13 +45,11 @@ def main():
     dp.update.outer_middleware(LanguageCheck())
     
     app = Application()
-
     SimpleRequestHandler(
         dispatcher=dp,
         bot=bot,
-    ).register(app, path="/AAAA")
+    ).register(app, path="/")
     setup_application(app, dp, bot=bot)
-
     run_app(app, host="127.0.0.1", port=7771)
 
 
