@@ -48,7 +48,7 @@ def main():
     SimpleRequestHandler(
         dispatcher=dp,
         bot=bot,
-    ).register(app, path="/")
+    ).register(app, path="/AAAA")
     setup_application(app, dp, bot=bot)
     run_app(app, host="127.0.0.1", port=7771)
 
