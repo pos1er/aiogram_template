@@ -8,7 +8,7 @@ from aiohttp.web import run_app
 from aiohttp.web_app import Application
 
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
-from aiogram import Router
+from aiogram import Router, F, types
 import asyncio
 import logging
 
@@ -17,6 +17,15 @@ logger = logging.getLogger(__name__)
 WEBHOOK_URL = f"https://pos1er.com/AAAA"
 
 main_router = Router()
+
+
+@main_router.message(F.text)
+async def echo(message: types.Message):
+    # Regular request, add bot: Bot to handler kwargs
+    # await bot.send_message(message.chat.id, message.text)
+
+    # or reply INTO webhook
+    return bot.send_message(chat_id=message.chat.id, text=message.text)
 
 
 @main_router.startup()
