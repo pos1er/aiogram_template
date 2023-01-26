@@ -1,36 +1,52 @@
-from loader import bot
-# from handlers.users.timers import CheckTime
-from utils.default_commands import set_default_commands
-from handlers.users import start_menu, admin_panel
-from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
-import asyncio
 import logging
+from aiohttp import web
+from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
+from aiogram.webhook.aiohttp_server import (
+    SimpleRequestHandler,
+    setup_application,
+)
+
+from data.config import BASE_URL
+from handlers.users.start_menu import start_router
+from handlers.users.admin_panel import admin_router
 
 logger = logging.getLogger(__name__)
 
-
-async def main():
-    from handlers import dp
-    try:
-        # dp.loop.create_task(CheckTime(10).start_all())
-        from utils.notify_admins import on_startup_notify
-        await on_startup_notify(bot)
-        await set_default_commands(bot)
-        dp.include_router(start_menu.router)
-        dp.include_router(admin_panel.router)
-        dp.update.outer_middleware(BanAcceptCheck())
-        dp.update.outer_middleware(ThrottlingMiddleware())
-        dp.update.outer_middleware(LanguageCheck())
-
-        await dp.start_polling(bot, dispatcher=dp, allowed_updates=dp.resolve_used_update_types())
-    finally:
-        await dp.storage.close()
-        # await dp.storage.wait_closed()
-        await bot.session.close()
+WEB_SERVER_HOST = "127.0.0.1"
+WEB_SERVER_PORT = 7771
+MAIN_BOT_PATH = "/test_bot"
+REDIS_DSN = "redis://localhost:6379/0"
 
 
-if __name__ == '__main__':
-    try:
-        asyncio.run(main())
-    except (KeyboardInterrupt, SystemExit):
-        logger.error("Bot stopped!")
+async def on_startup(dispatcher, bot):
+    await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
+    await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
+
+
+async def on_shutdown(dispatcher, bot):
+    await bot.delete_webhook()
+    await bot.send_message(1502268714, "<b>✅ Бот остановлен</b>")
+
+
+def main():
+    from loader import bot, dp
+    dp.include_router(start_router)
+    dp.include_router(admin_router)
+    dp.startup.register(on_startup)
+    dp.shutdown.register(on_shutdown)
+    
+    dp.update.outer_middleware(BanAcceptCheck())
+    dp.update.outer_middleware(ThrottlingMiddleware())
+    dp.update.outer_middleware(LanguageCheck())
+
+    app = web.Application()
+    SimpleRequestHandler(dispatcher=dp,
+                         bot=bot).register(app, path=MAIN_BOT_PATH)
+
+    setup_application(app, dp, bot=bot)
+    web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
+    main()

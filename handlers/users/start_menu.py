@@ -17,11 +17,11 @@ from mongodb import Users, Payments, MainGets
 import time
 
 
-router = Router()
-router.message.filter(IsPrivate())
+start_router = Router()
+start_router.message.filter(IsPrivate())
 
 
-@router.message(CommandStart(), NewUser())
+@start_router.message(CommandStart(), NewUser())
 async def start_menu(message: Message, state: FSMContext):
     captcha_status = await MainGets().captcha_status()
     if captcha_status:
@@ -52,7 +52,7 @@ async def start_menu(message: Message, state: FSMContext):
         await state.set_state(UserStates.language_choice)
 
 
-@router.message(CommandStart())
+@start_router.message(CommandStart())
 async def start_menu(message: Message, state: FSMContext, _):
     await state.clear()
     start_text = _('start_text')
@@ -60,7 +60,7 @@ async def start_menu(message: Message, state: FSMContext, _):
     await state.update_data({'a': 'aaaaa'})
 
 
-@router.callback_query(lambda x: x.data in ['en', 'ru'], StateFilter(UserStates.language_choice))
+@start_router.callback_query(lambda x: x.data in ['en', 'ru'], StateFilter(UserStates.language_choice))
 async def language_choice(callback_query: CallbackQuery, _):
     import gettext
     _ = gettext.translation(
@@ -71,7 +71,7 @@ async def language_choice(callback_query: CallbackQuery, _):
     await bot.edit_message_text(text=start_text, chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
 
 
-@router.message(Command("test"))
+@start_router.message(Command("test"))
 async def start_menu(message: Message, state: FSMContext, _):
     start_text = _('start_text')
     await bot.send_message(text=start_text, chat_id=message.from_user.id)
