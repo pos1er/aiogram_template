@@ -3,9 +3,9 @@ from aiogram.filters import CommandStart, Text, StateFilter, Command
 from aiogram.types import Message, CallbackQuery, ContentType, InputMediaVideo, InputFile, InputMediaPhoto, URLInputFile, BufferedInputFile
 from aiogram import html, Router
 
-# from app.misc.filename_utils import generate_captcha_image_filename
-# from app.misc.kb_generators import generate_captcha_keyboard
-# from app.services.captcha import CaptchaService
+from captcha.misc.filename_utils import generate_captcha_image_filename
+from captcha.misc.kb_generators import generate_captcha_keyboard
+from captcha.services.captcha import CaptchaService
 
 from filters.private_chat import IsPrivate
 from filters.is_url import IsUrl
@@ -22,28 +22,31 @@ start_router.message.filter(IsPrivate())
 
 
 @start_router.message(CommandStart(), NewUser())
-async def start_menu(message: Message, state: FSMContext):
+async def start_menu(message: Message, state: FSMContext, captcha: CaptchaService):
     captcha_status = await MainGets().captcha_status()
     if captcha_status:
-        print(1)
-        # captcha_data = await CaptchaService.generate_captcha()
-        # salt = await CaptchaService.lock_user(
-        #     chat_id, user_id, correct_code=captcha_data.correct_emoji_code
-        # )
-        # captcha_text = ("Привет 👋\n"
-        #     "Выбери <u>правильный вариант</u> в соответствии с заданием на картинке.\n"
-        #     "Hi 👋\n"
-        #     "Choose the <u>right option</u> according to the task in the picture.")
-        # captcha_kb = generate_captcha_keyboard(
-        #     chat_id, user_id, salt, emoji_data=captcha_data.emoji_data
-        # )
-        # captcha_photo = BufferedInputFile(
-        #     file=captcha_data.image.getvalue(),
-        #     filename=generate_captcha_image_filename(chat_id, user_id),
-        # )
-        # await bot.send_photo(
-        #     user_id, photo=captcha_photo, caption=captcha_text, reply_markup=captcha_kb
-        # )
+        chat_id = message.chat.id
+        user_id = message.from_user.id
+        captcha_data = await captcha.generate_captcha()
+        salt = await captcha.lock_user(
+            chat_id, user_id, correct_code=captcha_data.correct_emoji_code
+        )
+        captcha_text = (
+            "Привет 👋\n"
+            "Ты отправил(а) заявку на вступление в чат {chat}.\n"
+            "Но прежде чем я её одобрю, давай проверим, что ты действительно <b>человек</b>:\n"
+            "Выбери <u>правильный вариант</u> в соответствии с заданием на картинке."
+        ).format(chat=html.bold(message.chat.title) if message.chat.title else "")
+        captcha_kb = generate_captcha_keyboard(
+            chat_id, user_id, salt, emoji_data=captcha_data.emoji_data
+        )
+        captcha_photo = BufferedInputFile(
+            file=captcha_data.image.getvalue(),
+            filename=generate_captcha_image_filename(chat_id, user_id),
+        )
+        await bot.send_photo(
+            user_id, photo=captcha_photo, caption=captcha_text, reply_markup=captcha_kb
+        )
     else:
         await Users().add_new_user()
         start_text = f'''Welcome, {html.link(html.quote(message.from_user.full_name), f'tg://user?id={message.from_user.id}')}\n
