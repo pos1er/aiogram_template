@@ -1,4 +1,3 @@
-import logging
 from aiohttp import web
 from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
 from aiogram.webhook.aiohttp_server import (
@@ -14,7 +13,7 @@ from handlers.users.start_menu import start_router
 from handlers.users.admin_panel import admin_router
 from handlers.users.captcha_answer import captcha_router
 
-logger = logging.getLogger(__name__)
+from loggers import app as logger
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
@@ -66,5 +65,5 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    # logging.basicConfig(level=logging.INFO)
     main()
