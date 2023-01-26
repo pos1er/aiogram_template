@@ -1,24 +1,25 @@
 import logging
 from typing import Any, Dict
 
-from captcha.misc.settings_reader import Settings
+import datetime
 from captcha.services.captcha import CaptchaService
 from captcha.services.captcha_generator import CaptchaGenerator
 from captcha.services.captcha_scheduler import CaptchaScheduler
 from captcha.services.lock_user import LockUserService
+from data.config import REDIS_URL, CAPTCHA_DURATION
 
 
-async def configure_services(settings: Settings) -> Dict[str, Any]:
-    lock_service = LockUserService(connection_uri=settings.redis.connection_uri)
+async def configure_services() -> Dict[str, Any]:
+    lock_service=LockUserService(connection_uri = REDIS_URL)
     captcha_scheduler = CaptchaScheduler()
     captcha_generator = CaptchaGenerator()
     captcha = CaptchaService(
         lock_service,
         captcha_scheduler,
         captcha_generator,
-        captcha_duration=settings.captcha.duration,
+        captcha_duration = datetime.timedelta(seconds=CAPTCHA_DURATION),
     )
-    await captcha_scheduler.init(connection_uri=settings.redis.connection_uri)
+    await captcha_scheduler.init(connection_uri=REDIS_URL)
     captcha_generator.load_emoji()
     return {"captcha": captcha}
 
