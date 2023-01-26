@@ -28,7 +28,7 @@ async def on_startup(bot):
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 
-@dp.startup()
+@dp.shutdown()
 async def on_shutdown(dp, bot):
     logger.warning('Shutting down..')
 
