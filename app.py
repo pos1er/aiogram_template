@@ -6,7 +6,7 @@ from aiogram.webhook.aiohttp_server import (
 )
 
 from captcha.misc.configure import configure_logging, configure_services
-from captcha.misc.settings_reader import Settings
+from captcha.misc.settings_reader import Settings, CaptchaSettings, RedisSettings
 
 from data.config import BASE_URL, CAPTCHA_DURATION
 from handlers.users.start_menu import start_router
@@ -20,7 +20,7 @@ WEB_SERVER_PORT = 7771
 MAIN_BOT_PATH = "/test_bot"
 REDIS_DSN = "redis://localhost:6379/0"
 
-settings = Settings()
+settings = Settings(redis=RedisSettings(), captcha=CaptchaSettings(CAPTCHA_DURATION))
 
 async def on_startup(dp, bot):
     logger.info('Bot startup')

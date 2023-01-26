@@ -44,6 +44,7 @@ class CaptchaSettings(BaseModel):
 
     @validator("duration")
     def to_timedelta(cls, v: Union[int, datetime.timedelta]) -> datetime.timedelta:
+        v = CAPTCHA_DURATION
         if isinstance(v, datetime.timedelta):
             return v
         return datetime.timedelta(seconds=v)
@@ -55,6 +56,3 @@ class Settings(BaseSettings):
     # webapp: WebAppSettings
     redis: RedisSettings
     captcha: CaptchaSettings
-    
-    def __init__(self):
-        self.captcha = CaptchaSettings(duration=CAPTCHA_DURATION)
