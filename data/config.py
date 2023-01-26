@@ -6,7 +6,9 @@ load_dotenv()
 
 mongodb_url = str(os.getenv("MONGODB_LINK"))
 
-TOKEN = str(os.getenv("TOKEN"))
+MAIN_TOKEN = str(os.getenv("MAIN_TOKEN"))
+
+BASE_URL = str(os.getenv("BASE_URL"))
 
 crystal_pay_key = str(os.getenv("CRYSTAL_PAY_KEY"))
 

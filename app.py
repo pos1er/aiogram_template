@@ -1,92 +1,52 @@
-from os import getenv
-from typing import Any, Dict, Union
-
+import logging
 from aiohttp import web
-from handlers.users.start_menu import start_router
-
-from aiogram import Bot, Dispatcher, F, Router
-from aiogram.client.session.aiohttp import AiohttpSession
-from aiogram.exceptions import TelegramUnauthorizedError
-from aiogram.filters import Command, CommandObject
-from aiogram.fsm.storage.redis import DefaultKeyBuilder, RedisStorage
-from aiogram.types import Message
-from aiogram.utils.token import TokenValidationError, validate_token
+from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
 from aiogram.webhook.aiohttp_server import (
     SimpleRequestHandler,
-    TokenBasedRequestHandler,
     setup_application,
 )
-from data.config import TOKEN
 
-main_router = Router()
+from data.config import BASE_URL
+from handlers.users.start_menu import start_router
+from handlers.users.admin_panel import admin_router
 
-BASE_URL = getenv("BASE_URL", "https://pos1er.com")
+logger = logging.getLogger(__name__)
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
-MAIN_BOT_PATH = "/AAAA"
-# OTHER_BOTS_PATH = "/webhook/bot/{bot_token}"
+MAIN_BOT_PATH = "/test_bot"
 REDIS_DSN = "redis://localhost:6379/0"
 
-# OTHER_BOTS_URL = f"{BASE_URL}{OTHER_BOTS_PATH}"
 
-
-def is_bot_token(value: str) -> Union[bool, Dict[str, Any]]:
-    try:
-        validate_token(value)
-    except TokenValidationError:
-        return False
-    return True
-
-
-@main_router.message(Command(commands=["add"], magic=F.args.func(is_bot_token)))
-async def command_add_bot(message: Message, command: CommandObject, bot: Bot) -> Any:
-    new_bot = Bot(token=command.args, session=bot.session)
-    try:
-        bot_user = await new_bot.get_me()
-    except TelegramUnauthorizedError:
-        return message.answer("Invalid token")
-    await new_bot.delete_webhook(drop_pending_updates=True)
-    # await new_bot.set_webhook(OTHER_BOTS_URL.format(bot_token=command.args))
-    return await message.answer(f"Bot @{bot_user.username} successful added")
-
-
-@main_router.message(Command(commands=["start"]))
-async def start_command(message: Message, command: CommandObject, bot: Bot) -> Any:
-    return await message.answer(f"Bot")
-
-
-async def on_startup(dispatcher: Dispatcher, bot: Bot):
+async def on_startup(dispatcher, bot):
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
+    await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
+
+
+async def on_shutdown(dispatcher, bot):
+    await bot.delete_webhook()
+    await bot.send_message(1502268714, "<b>✅ Бот остановлен</b>")
 
 
 def main():
-    session = AiohttpSession()
-    bot_settings = {"session": session, "parse_mode": "HTML"}
-    bot = Bot(token=TOKEN, **bot_settings)
-    storage = RedisStorage.from_url(
-        REDIS_DSN, key_builder=DefaultKeyBuilder(with_bot_id=True))
-
-    main_dispatcher = Dispatcher(storage=storage)
-    main_dispatcher.include_router(main_router)
-    main_dispatcher.startup.register(on_startup)
-
-    multibot_dispatcher = Dispatcher(storage=storage)
-    multibot_dispatcher.include_router(start_router)
+    from loader import bot, dp
+    dp.include_router(start_router)
+    dp.include_router(admin_router)
+    dp.startup.register(on_startup)
+    dp.shutdown.register(on_shutdown)
+    
+    dp.update.outer_middleware(BanAcceptCheck())
+    dp.update.outer_middleware(ThrottlingMiddleware())
+    dp.update.outer_middleware(LanguageCheck())
 
     app = web.Application()
-    SimpleRequestHandler(dispatcher=main_dispatcher,
+    SimpleRequestHandler(dispatcher=dp,
                          bot=bot).register(app, path=MAIN_BOT_PATH)
-    # TokenBasedRequestHandler(
-    #     dispatcher=multibot_dispatcher,
-    #     bot_settings=bot_settings,
-    # ).register(app, path=OTHER_BOTS_PATH)
 
-    setup_application(app, main_dispatcher, bot=bot)
-    setup_application(app, multibot_dispatcher)
-
+    setup_application(app, dp, bot=bot)
     web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     main()
