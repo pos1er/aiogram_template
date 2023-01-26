@@ -22,8 +22,8 @@ REDIS_DSN = "redis://localhost:6379/0"
 async def on_startup(dp, bot):
     logger.info('Bot startup')
     
-    services = await configure_services()
-    dp.workflow_data.update(services)
+    # services = await configure_services()
+    # dp.workflow_data.update(services)
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
 
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
