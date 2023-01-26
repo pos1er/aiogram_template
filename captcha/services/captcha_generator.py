@@ -5,7 +5,7 @@ from typing import List, Optional, Tuple
 
 from captcha.data_structures.captcha import CaptchaData, CaptchaStaticData, Emoji, EmojiData
 from captcha.misc.exceptions import CaptchaLoadError, FileOpenError
-from captcha.misc.loggers import logger
+from app import logger
 from captcha.misc.paths import ASSETS_DIR
 
 DEFAULT_CAPTCHA_BUTTONS_NUMBER = 10

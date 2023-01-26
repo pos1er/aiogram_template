@@ -1,6 +1,6 @@
 from typing import Optional
 
-from app.data_structures.captcha import CaptchaResultStatus
+from captcha.data_structures.captcha import CaptchaResultStatus
 
 
 def generate_captcha_image_filename(

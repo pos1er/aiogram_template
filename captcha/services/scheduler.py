@@ -7,7 +7,7 @@ from arq.connections import ArqRedis, RedisSettings
 from arq.jobs import Job
 
 from captcha.data_structures.arq import JobConfig
-from captcha.misc.loggers import logger
+from app import logger
 
 
 class ArqScheduler:

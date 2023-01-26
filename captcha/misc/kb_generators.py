@@ -3,8 +3,8 @@ from typing import Set
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from app.data_structures.callback_data import CaptchaAnswerCallbackData
-from app.data_structures.captcha import Emoji
+from captcha.data_structures.callback_data import CaptchaAnswerCallbackData
+from captcha.data_structures.captcha import Emoji
 
 MAX_CAPTCHA_BUTTONS_ROW_LENGTH = 5
 
