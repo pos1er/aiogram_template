@@ -18,14 +18,22 @@ MAIN_BOT_PATH = "/test_bot"
 REDIS_DSN = "redis://localhost:6379/0"
 
 
-async def on_startup(dispatcher, bot):
+async def on_startup(dp, bot):
+    logger.info('Bot startup')
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
+
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 
-async def on_shutdown(dispatcher, bot):
+async def on_shutdown(dp, bot):
+    logger.warning('Shutting down..')
+
     await bot.delete_webhook()
+    await dp.storage.close()
+    await dp.storage.wait_closed()
+
     await bot.send_message(1502268714, "<b>✅ Бот остановлен</b>")
+    logger.warning('Bye!')
 
 
 def main():
@@ -34,7 +42,7 @@ def main():
     dp.include_router(admin_router)
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
-    
+
     dp.update.outer_middleware(BanAcceptCheck())
     dp.update.outer_middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(LanguageCheck())
