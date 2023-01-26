@@ -6,6 +6,7 @@ from aiogram.webhook.aiohttp_server import (
     setup_application,
 )
 
+from loader import bot, dp
 from data.config import BASE_URL
 from handlers.users.start_menu import start_router
 from handlers.users.admin_panel import admin_router
@@ -18,13 +19,16 @@ MAIN_BOT_PATH = "/test_bot"
 REDIS_DSN = "redis://localhost:6379/0"
 
 
-async def on_startup(dp, bot):
+@dp.startup()
+async def on_startup(bot):
     logger.info('Bot startup')
+
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
 
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 
+@dp.startup()
 async def on_shutdown(dp, bot):
     logger.warning('Shutting down..')
 
@@ -37,7 +41,6 @@ async def on_shutdown(dp, bot):
 
 
 def main():
-    from loader import bot, dp
     dp.include_router(start_router)
     dp.include_router(admin_router)
     dp.startup.register(on_startup)
