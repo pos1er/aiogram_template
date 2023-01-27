@@ -12,7 +12,7 @@ services:
       - "6379:6379"
   bot:
     build: .
-    command: "python -m bot"
+    command: "python3 -m bot"
     env_file:
       - ./.env
     restart: always
@@ -22,7 +22,7 @@ services:
     stop_signal: SIGINT
   worker:
     build: .
-    command: "python -m captcha"
+    command: "python3 -m captcha"
     restart: on-failure
     working_dir: "/root/bots/aiogram_template"
     stop_signal: SIGINT
