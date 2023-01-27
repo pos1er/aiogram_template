@@ -19,7 +19,6 @@ MAIN_BOT_PATH = "/test_bot"
 REDIS_DSN = "redis://localhost:6379/0"
 
 
-@dp.startup()
 async def on_startup():
     logger.info('Bot startup')
 
@@ -28,7 +27,6 @@ async def on_startup():
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 
-@dp.shutdown()
 async def on_shutdown():
     logger.warning('Shutting down..')
 
