@@ -27,6 +27,25 @@ MAIN_BOT_PATH = "/test_bot"
 REDIS_DSN = "redis://localhost:6379/0"
 
 
+async def startup(ctx: Dict[str, Any]):
+    ctx["bot"] = bot
+    ctx["lock_user_service"] = LockUserService(
+        connection_uri=REDIS_URL,
+    )
+
+
+async def shutdown(ctx: Dict[str, Any]):
+    bot = ctx.pop("bot")
+    await bot.session.close()
+
+
+class WorkerSettings:
+    on_startup = startup
+    on_shutdown = shutdown
+    functions = [join_expired_task]
+    allow_abort_jobs = True
+
+
 async def on_startup():
     app_logger.info('Bot startup')
 
@@ -53,25 +72,6 @@ async def on_shutdown():
 
     await bot.send_message(1502268714, "<b>✅ Бот остановлен</b>")
     app_logger.warning('Bye!')
-
-
-async def startup(ctx: Dict[str, Any]):
-    ctx["bot"] = bot
-    ctx["lock_user_service"] = LockUserService(
-        connection_uri=REDIS_URL,
-    )
-
-
-async def shutdown(ctx: Dict[str, Any]):
-    bot = ctx.pop("bot")
-    await bot.session.close()
-
-
-class WorkerSettings:
-    on_startup = startup
-    on_shutdown = shutdown
-    functions = [join_expired_task]
-    allow_abort_jobs = True
 
 
 def main():
