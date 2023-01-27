@@ -54,11 +54,9 @@ async def on_startup():
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
 
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
+    loop = asyncio.get_event_loop()
+    loop.create_task(on_startup_redis())
 
-
-async def on_startup_both():
-    tasks = [asyncio.ensure_future(on_startup_redis()), asyncio.ensure_future(on_startup())]
-    await asyncio.gather(*tasks)
 
 async def on_startup_redis():
     app_logger.info('Redis started..')
@@ -81,7 +79,7 @@ def main():
     configure_logging()
     dp.include_router(router)
 
-    dp.startup.register(on_startup_both)
+    dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
 
     dp.update.outer_middleware(BanAcceptCheck())
