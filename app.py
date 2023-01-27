@@ -5,6 +5,7 @@ from aiogram.webhook.aiohttp_server import (
     SimpleRequestHandler,
     setup_application,
 )
+import asyncio
 
 from captcha.misc.configure import configure_logging, configure_services
 
@@ -35,6 +36,14 @@ async def on_startup():
 
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
+
+# async def on_startup_both():
+#     tasks = []
+
+async def on_startup_redis():
+    redis_settings = RedisSettings.from_dsn(REDIS_URL)
+    settings_cls = cast(WorkerSettingsType, WorkerSettings)
+    run_worker(settings_cls, redis_settings=redis_settings)
 
 async def on_shutdown():
     app_logger.warning('Shutting down..')
@@ -81,9 +90,8 @@ def main():
                          bot=bot).register(app, path=MAIN_BOT_PATH)
 
     setup_application(app, dp, bot=bot)
-    redis_settings = RedisSettings.from_dsn(REDIS_URL)
-    settings_cls = cast(WorkerSettingsType, WorkerSettings)
-    run_worker(settings_cls, redis_settings=redis_settings)
+    loop = asyncio.get_event_loop()
+    loop.create_task(on_startup_redis())
     web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
 
 
