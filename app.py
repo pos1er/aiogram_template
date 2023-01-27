@@ -1,4 +1,3 @@
-import logging
 from aiohttp import web
 from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
 from aiogram.webhook.aiohttp_server import (
@@ -11,8 +10,7 @@ from captcha.misc.configure import configure_logging, configure_services
 from loader import bot, dp
 from data.config import BASE_URL
 from handlers import router
-
-logger = logging.getLogger(__name__)
+from utils.loggers import app_logger
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
@@ -21,7 +19,7 @@ REDIS_DSN = "redis://localhost:6379/0"
 
 
 async def on_startup():
-    logger.info('Bot startup')
+    app_logger.info('Bot startup')
 
     services = await configure_services()
     dp.workflow_data.update(services)
@@ -31,16 +29,17 @@ async def on_startup():
 
 
 async def on_shutdown():
-    logger.warning('Shutting down..')
+    app_logger.warning('Shutting down..')
 
     await bot.delete_webhook()
     await dp.storage.close()
 
     await bot.send_message(1502268714, "<b>✅ Бот остановлен</b>")
-    logger.warning('Bye!')
+    app_logger.warning('Bye!')
 
 
 def main():
+    configure_logging()
     dp.include_router(router)
 
     dp.startup.register(on_startup)
@@ -59,5 +58,4 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
     main()
