@@ -5,15 +5,15 @@ import time
 
 
 class AdminFilter(BaseFilter):
-    admin_type: str
+    admin_right: str = ''
 
-    async def __call__(self, message: Message):
-        if not self.admin_type:
-            self.admin_type = ''
+    # async def __call__(self, message: Message):
+    #     if not self.admin_right:
+    #         self.admin_right = ''
 
     async def check(self, message: Message) -> bool:
-        return await self.check_admin(message, self.admin_type)
+        return await self.check_admin(message, self.admin_right)
 
     @staticmethod
-    async def check_admin(message: Message, admin_type) -> bool:
-        return await ForFilters().admin_check(admin_type)
+    async def check_admin(message: Message, admin_right) -> bool:
+        return await ForFilters().admin_check(admin_right)

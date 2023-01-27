@@ -201,8 +201,11 @@ class ForFilters:
         user = User.get_current()
         self.user_id = user.id
 
-    async def admin_check(self, admin_type) -> Coroutine:
-        return admins.find_one({'user_id': self.user_id, 'type': admin_type})
+    async def admin_check(self, admin_right) -> Coroutine:
+        if admin_right:
+            return admins.find_one({'user_id': self.user_id, f'rights.{admin_right}': True})
+        else:
+            return admins.find_one({'user_id': self.user_id})
     
     async def user_check(self, user_id) -> Coroutine:
         #  todo: сделать блок по времени

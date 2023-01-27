@@ -9,7 +9,7 @@ from aiogram.webhook.aiohttp_server import (
 from loader import bot, dp
 from data.config import BASE_URL
 from handlers.users.start_menu import start_router
-from handlers.users.admin_panel import admin_router
+from handlers.admins.any_admin import admin_router
 
 logger = logging.getLogger(__name__)
 
