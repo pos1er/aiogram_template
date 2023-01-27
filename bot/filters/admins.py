@@ -1,6 +1,6 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
-from mongodb import ForFilters
+from bot.mongodb import ForFilters
 import time
 
 

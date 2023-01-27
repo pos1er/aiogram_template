@@ -6,11 +6,11 @@ from aiogram.webhook.aiohttp_server import (
 
 from captcha.misc.configure import configure_logging, configure_services
 
-from data.config import BASE_URL
-from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
-from loader import bot, dp
-from handlers import router
-from utils.loggers import app_logger
+from bot.data.config import BASE_URL
+from bot.middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
+from bot.loader import bot, dp
+from bot.handlers import router
+from bot.utils.loggers import app_logger
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771

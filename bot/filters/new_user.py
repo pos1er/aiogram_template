@@ -1,7 +1,7 @@
 from aiogram.types import Message
 from aiogram.filters import BaseFilter
 from aiogram.fsm.context import FSMContext
-from mongodb import ForFilters
+from bot.mongodb import ForFilters
 
 
 class NewUser(BaseFilter):

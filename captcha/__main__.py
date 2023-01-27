@@ -1,7 +1,7 @@
 from typing import Any, Dict, cast
 
 from bot.loader import bot
-from data.config import REDIS_URL
+from bot.data.config import REDIS_URL
 from arq import run_worker
 from arq.connections import RedisSettings
 from arq.typing import WorkerSettingsType

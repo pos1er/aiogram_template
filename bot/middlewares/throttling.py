@@ -4,7 +4,7 @@ from typing import Callable, Dict, Any, Awaitable, Union
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject, Message, CallbackQuery, Update
 from aiogram.dispatcher.flags import get_flag
-from mongodb import ForFilters
+from bot.mongodb import ForFilters
 from cachetools import TTLCache
 import gettext
 

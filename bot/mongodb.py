@@ -5,7 +5,7 @@ from xmlrpc.client import Boolean
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputFile, User
 from pymongo import MongoClient
-from data.config import mongodb_url, crystal_pay_key, crypto_bot_key, private_key_payid19, public_key_payid19
+from bot.data.config import mongodb_url, crystal_pay_key, crypto_bot_key, private_key_payid19, public_key_payid19
 import time
 import aiohttp
 import json

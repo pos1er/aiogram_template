@@ -6,7 +6,7 @@ from captcha.services.captcha import CaptchaService
 from captcha.services.captcha_generator import CaptchaGenerator
 from captcha.services.captcha_scheduler import CaptchaScheduler
 from captcha.services.lock_user import LockUserService
-from data.config import REDIS_URL, CAPTCHA_DURATION
+from bot.data.config import REDIS_URL, CAPTCHA_DURATION
 
 
 async def configure_services() -> Dict[str, Any]:

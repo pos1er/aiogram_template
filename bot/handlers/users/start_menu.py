@@ -7,13 +7,13 @@ from captcha.misc.filename_utils import generate_captcha_image_filename
 from captcha.misc.kb_generators import generate_captcha_keyboard
 from captcha.services.captcha import CaptchaService
 
-from filters.private_chat import IsPrivate
-from filters.is_url import IsUrl
-from filters.new_user import NewUser
-from keyboards.inline.user import language_menu
-from states.user import UserStates
-from loader import dp, bot
-from mongodb import Users, Payments, MainGets, Admins
+from bot.filters.private_chat import IsPrivate
+from bot.filters.is_url import IsUrl
+from bot.filters.new_user import NewUser
+from bot.keyboards.inline.user import language_menu
+from bot.states.user import UserStates
+from bot.loader import dp, bot
+from bot.mongodb import Users, Payments, MainGets, Admins
 import time
 
 

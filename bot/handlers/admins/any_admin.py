@@ -3,14 +3,14 @@ from aiogram.filters import Command, CommandObject, StateFilter
 from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram import F, html, Router
 
-from filters.private_chat import IsPrivate
-from filters.admins import AdminFilter
+from bot.filters.private_chat import IsPrivate
+from bot.filters.admins import AdminFilter
 
-from keyboards.inline.admin import admin_menu
-from keyboards.inline.user import delete_me
-from loader import dp, bot
-from mongodb import Admins, MainGets
-from states.admin import AdminStates
+from bot.keyboards.inline.admin import admin_menu
+from bot.keyboards.inline.user import delete_me
+from bot.loader import dp, bot
+from bot.mongodb import Admins, MainGets
+from bot.states.admin import AdminStates
 
 
 any_admin_router = Router()

@@ -2,7 +2,7 @@ import datetime
 from typing import Any, Mapping, Tuple, Union
 
 from pydantic import BaseModel, BaseSettings, validator
-from data.config import CAPTCHA_DURATION, REDIS_URL
+from bot.data.config import CAPTCHA_DURATION, REDIS_URL
 from captcha.misc.paths import BASE_DIR
 
 

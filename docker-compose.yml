@@ -18,11 +18,11 @@ services:
     restart: always
     ports:
       - "7771:7771"
-    working_dir: "/root/bots/aiogram_template"
+    # working_dir: "/root/bots/aiogram_template"
     stop_signal: SIGINT
   worker:
     build: .
     command: "python3 -m captcha"
     restart: on-failure
-    working_dir: "/root/bots/aiogram_template"
+    # working_dir: "/root/bots/aiogram_template"
     stop_signal: SIGINT
