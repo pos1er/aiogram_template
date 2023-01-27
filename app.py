@@ -81,7 +81,7 @@ def main():
     configure_logging()
     dp.include_router(router)
 
-    dp.startup.register(on_startup)
+    dp.startup.register(on_startup_both)
     dp.shutdown.register(on_shutdown)
 
     dp.update.outer_middleware(BanAcceptCheck())
