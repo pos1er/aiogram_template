@@ -1,7 +1,7 @@
 from aiogram import Router
 
-from .users import router as users_router
-from .admins import router as admins_router
+from .users import users_router
+from .admins import admins_router
 
 router = Router()
 
