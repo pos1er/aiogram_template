@@ -56,10 +56,13 @@ async def on_startup():
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 
-# async def on_startup_both():
-#     tasks = []
+async def on_startup_both():
+    tasks = [asyncio.ensure_future(on_startup()), asyncio.ensure_future(on_startup_redis())]
+    await asyncio.gather(*tasks)
 
 async def on_startup_redis():
+    app_logger.warning('Redis started..')
+    
     redis_settings = RedisSettings.from_dsn(REDIS_URL)
     settings_cls = cast(WorkerSettingsType, WorkerSettings)
     run_worker(settings_cls, redis_settings=redis_settings)
