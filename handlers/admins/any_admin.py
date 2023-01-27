@@ -26,6 +26,16 @@ async def admin_menu_function(message: Message, state: FSMContext):
     await message.answer(text=text_menu, reply_markup=admin_menu)
 
 
+@admin_router.callback_query(F.data == 'admin')
+async def admin_menu_function(callback_query: CallbackQuery, state: FSMContext):
+    await callback_query.answer()
+    await state.clear()
+    text_menu = f'''<u>Вход прошел успешно</u>\n
+<b>Добро пожаловать, {callback_query.from_user.full_name}</b>'''
+    await state.set_state(AdminStates.admin)
+    await bot.send_message(text=text_menu, reply_markup=admin_menu, chat_id=callback_query.from_user.id)
+
+
 @admin_router.callback_query(F.data == 'settings')
 async def settings_menu_function(callback_query: CallbackQuery, state: FSMContext):
     captcha_status = await MainGets().captcha_status()
