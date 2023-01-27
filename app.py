@@ -11,7 +11,7 @@ from data.config import BASE_URL, CAPTCHA_DURATION
 from handlers.users.start_menu import start_router
 from handlers.users.admin_panel import admin_router
 from handlers.users.captcha_answer import captcha_router
-
+from loader import bot, dp
 from loggers import app_logger
 
 WEB_SERVER_HOST = "127.0.0.1"
@@ -19,7 +19,7 @@ WEB_SERVER_PORT = 7771
 MAIN_BOT_PATH = "/test_bot"
 REDIS_DSN = "redis://localhost:6379/0"
 
-async def on_startup(dp, bot):
+async def on_startup():
     app_logger.info('Bot startup')
     
     services = await configure_services()
@@ -29,7 +29,7 @@ async def on_startup(dp, bot):
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 
-async def on_shutdown(dp, bot):
+async def on_shutdown():
     app_logger.warning('Shutting down..')
 
     await bot.delete_webhook()
@@ -42,7 +42,6 @@ async def on_shutdown(dp, bot):
 
 def main():
     configure_logging()
-    from loader import bot, dp
     dp.include_router(start_router)
     dp.include_router(admin_router)
     dp.include_router(captcha_router)
