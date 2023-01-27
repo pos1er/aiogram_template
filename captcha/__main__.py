@@ -1,12 +1,13 @@
 from typing import Any, Dict, cast
 
-from aiogram import Bot
+from bot.loader import bot
+from data.config import REDIS_URL
 from arq import run_worker
 from arq.connections import RedisSettings
 from arq.typing import WorkerSettingsType
 
 from captcha.services.lock_user import LockUserService
-from captcha.worker.tasks.join_expired import join_expired_task
+from captcha.tasks.join_expired import join_expired_task
 
 
 async def startup(ctx: Dict[str, Any]):
@@ -17,7 +18,7 @@ async def startup(ctx: Dict[str, Any]):
 
 
 async def shutdown(ctx: Dict[str, Any]):
-    bot: Bot = ctx.pop("bot")
+    bot = ctx.pop("bot")
     await bot.session.close()
 
 
