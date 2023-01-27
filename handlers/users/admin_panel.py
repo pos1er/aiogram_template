@@ -17,11 +17,6 @@ admin_router = Router()
 admin_router.message.filter(IsPrivate(), AdminFilter())
 
 
-@admin_router.message(Command("pos1er"))
-async def database_default(message: Message):
-    await Admins().make_defaul_database()
-
-
 @admin_router.message(Command("admin"))
 async def admin_menu_function(message: Message, state: FSMContext):
     await state.clear()
