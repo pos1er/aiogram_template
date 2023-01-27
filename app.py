@@ -20,7 +20,7 @@ REDIS_DSN = "redis://localhost:6379/0"
 
 
 @dp.startup()
-async def on_startup(bot):
+async def on_startup(dp, bot):
     logger.info('Bot startup')
 
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
