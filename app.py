@@ -6,10 +6,11 @@ from aiogram.webhook.aiohttp_server import (
     setup_application,
 )
 
+from captcha.misc.configure import configure_logging, configure_services
+
 from loader import bot, dp
 from data.config import BASE_URL
-from handlers.users.start_menu import start_router
-from handlers.admins.any_admin import admin_router
+from handlers import router
 
 logger = logging.getLogger(__name__)
 
@@ -22,6 +23,8 @@ REDIS_DSN = "redis://localhost:6379/0"
 async def on_startup():
     logger.info('Bot startup')
 
+    services = await configure_services()
+    dp.workflow_data.update(services)
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
 
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
@@ -38,8 +41,8 @@ async def on_shutdown():
 
 
 def main():
-    dp.include_router(start_router)
-    dp.include_router(admin_router)
+    dp.include_router(router)
+
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
 

@@ -13,11 +13,11 @@ from mongodb import Admins, MainGets
 from states.admin import AdminStates
 
 
-admin_router = Router()
-admin_router.message.filter(IsPrivate(), AdminFilter())
+any_admin_router = Router()
+any_admin_router.message.filter(IsPrivate(), AdminFilter())
 
 
-@admin_router.message(Command("admin"))
+@any_admin_router.message(Command("admin"))
 async def admin_menu_function(message: Message, state: FSMContext):
     await state.clear()
     text_menu = f'''<u>Вход прошел успешно</u>\n
@@ -26,7 +26,7 @@ async def admin_menu_function(message: Message, state: FSMContext):
     await message.answer(text=text_menu, reply_markup=admin_menu)
 
 
-@admin_router.callback_query(F.data == 'admin')
+@any_admin_router.callback_query(F.data == 'admin')
 async def admin_menu_function(callback_query: CallbackQuery, state: FSMContext):
     await callback_query.answer()
     await state.clear()
@@ -36,7 +36,7 @@ async def admin_menu_function(callback_query: CallbackQuery, state: FSMContext):
     await bot.send_message(text=text_menu, reply_markup=admin_menu, chat_id=callback_query.from_user.id)
 
 
-@admin_router.callback_query(F.data == 'settings')
+@any_admin_router.callback_query(F.data == 'settings')
 async def settings_menu_function(callback_query: CallbackQuery, state: FSMContext):
     captcha_status = await MainGets().captcha_status()
     if captcha_status:
@@ -57,7 +57,7 @@ async def settings_menu_function(callback_query: CallbackQuery, state: FSMContex
     await bot.edit_message_text(text='<b>⚙️ Настройки</b>', reply_markup=settings_menu, chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
 
 
-@admin_router.callback_query(F.data == 'captcha_edit', StateFilter(AdminStates.settings))
+@any_admin_router.callback_query(F.data == 'captcha_edit', StateFilter(AdminStates.settings))
 async def captcha_edit_function(callback_query: CallbackQuery, state: FSMContext):
     captcha_status = await MainGets().captcha_status()
     if captcha_status:
