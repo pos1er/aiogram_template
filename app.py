@@ -20,7 +20,7 @@ REDIS_DSN = "redis://localhost:6379/0"
 
 
 @dp.startup()
-async def on_startup(dp, bot):
+async def on_startup():
     logger.info('Bot startup')
 
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
@@ -29,7 +29,7 @@ async def on_startup(dp, bot):
 
 
 @dp.shutdown()
-async def on_shutdown(dp, bot):
+async def on_shutdown():
     logger.warning('Shutting down..')
 
     await bot.delete_webhook()
