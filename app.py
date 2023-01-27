@@ -57,7 +57,7 @@ async def on_startup():
 
 
 async def on_startup_both():
-    tasks = [asyncio.ensure_future(on_startup()), asyncio.ensure_future(on_startup_redis())]
+    tasks = [asyncio.ensure_future(on_startup_redis()), asyncio.ensure_future(on_startup())]
     await asyncio.gather(*tasks)
 
 async def on_startup_redis():
@@ -93,8 +93,8 @@ def main():
                          bot=bot).register(app, path=MAIN_BOT_PATH)
 
     setup_application(app, dp, bot=bot)
-    loop = asyncio.get_event_loop()
-    loop.create_task(on_startup_redis())
+    # loop = asyncio.get_event_loop()
+    # loop.create_task(on_startup_redis())
     web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
 
 
