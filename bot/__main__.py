@@ -1,5 +1,4 @@
 from aiohttp import web
-from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
 from aiogram.webhook.aiohttp_server import (
     SimpleRequestHandler,
     setup_application,
@@ -7,8 +6,9 @@ from aiogram.webhook.aiohttp_server import (
 
 from captcha.misc.configure import configure_logging, configure_services
 
+from data.config import BASE_URL
+from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
 from loader import bot, dp
-from data.config import BASE_URL, REDIS_URL
 from handlers import router
 from utils.loggers import app_logger
 
