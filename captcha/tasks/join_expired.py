@@ -3,7 +3,7 @@ from typing import Any, Dict
 from aiogram import Bot
 from aiogram.exceptions import TelegramAPIError
 
-from utils.loggers import arq_logger as logger
+from bot.utils.loggers import arq_logger as logger
 from captcha.services.lock_user import LockUserService
 
 
