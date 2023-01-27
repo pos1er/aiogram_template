@@ -32,7 +32,6 @@ async def on_shutdown():
 
     await bot.delete_webhook()
     await dp.storage.close()
-    await dp.storage.wait_closed()
 
     await bot.send_message(1502268714, "<b>✅ Бот остановлен</b>")
     logger.warning('Bye!')
