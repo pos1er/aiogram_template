@@ -35,11 +35,11 @@ async def handle_captcha_answer(
                 generate_chat_url_keyboard(chat.username) if chat.username else None
             )
             result_status = CaptchaResultStatus.SUCCESS
-            await bot.approve_chat_join_request(chat_id, user_id)
+            # await bot.approve_chat_join_request(chat_id, user_id)
         else:
             text = "К сожалению ответ неверный. Попробуйте ещё раз позже."
             result_status = CaptchaResultStatus.FAILURE
-            await bot.decline_chat_join_request(chat_id, user_id)
+            # await bot.decline_chat_join_request(chat_id, user_id)
         await captcha.unlock_user(chat_id, user_id, salt)
     result_image = await captcha.get_captcha_result_image(result_status)
     image_filename = generate_captcha_image_filename(chat_id, user_id, result_status)
