@@ -1,3 +1,4 @@
+from typing import Any, Dict, cast
 from aiohttp import web
 from middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
 from aiogram.webhook.aiohttp_server import (
@@ -8,9 +9,16 @@ from aiogram.webhook.aiohttp_server import (
 from captcha.misc.configure import configure_logging, configure_services
 
 from loader import bot, dp
-from data.config import BASE_URL
+from data.config import BASE_URL, REDIS_URL
 from handlers import router
 from utils.loggers import app_logger
+
+from arq import run_worker
+from arq.connections import RedisSettings
+from arq.typing import WorkerSettingsType
+
+from captcha.services.lock_user import LockUserService
+from captcha.worker.tasks.join_expired import join_expired_task
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
@@ -38,6 +46,25 @@ async def on_shutdown():
     app_logger.warning('Bye!')
 
 
+async def startup(ctx: Dict[str, Any]):
+    ctx["bot"] = bot
+    ctx["lock_user_service"] = LockUserService(
+        connection_uri=REDIS_URL,
+    )
+
+
+async def shutdown(ctx: Dict[str, Any]):
+    bot = ctx.pop("bot")
+    await bot.session.close()
+
+
+class WorkerSettings:
+    on_startup = startup
+    on_shutdown = shutdown
+    functions = [join_expired_task]
+    allow_abort_jobs = True
+
+
 def main():
     configure_logging()
     dp.include_router(router)
@@ -54,6 +81,9 @@ def main():
                          bot=bot).register(app, path=MAIN_BOT_PATH)
 
     setup_application(app, dp, bot=bot)
+    redis_settings = RedisSettings.from_dsn(REDIS_URL)
+    settings_cls = cast(WorkerSettingsType, WorkerSettings)
+    run_worker(settings_cls, redis_settings=redis_settings)
     web.run_app(app, host=WEB_SERVER_HOST, port=WEB_SERVER_PORT)
 
 
