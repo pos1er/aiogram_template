@@ -5,12 +5,12 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
+COPY requirements.txt /app/
 
 # ENV PYTHONPATH /usr/bin/python3
 
 RUN pip3 install --upgrade setuptools
-RUN pip3 install -r requirements.txt
-RUN chmod 755 .
+RUN pip3 install -r /app/requirements.txt
+# RUN chmod 755 .
 
 COPY . .
