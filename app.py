@@ -61,7 +61,7 @@ async def on_startup_both():
     await asyncio.gather(*tasks)
 
 async def on_startup_redis():
-    app_logger.warning('Redis started..')
+    app_logger.info('Redis started..')
     
     redis_settings = RedisSettings.from_dsn(REDIS_URL)
     settings_cls = cast(WorkerSettingsType, WorkerSettings)
