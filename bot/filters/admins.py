@@ -8,8 +8,6 @@ class AdminFilter(BaseFilter):
     admin_right: str = ''
 
     async def __call__(self, message: Message):
-        # if not self.admin_right:
-        #     self.admin_right = ''
         return await self.check(message)
 
     async def check(self, message: Message) -> bool:
