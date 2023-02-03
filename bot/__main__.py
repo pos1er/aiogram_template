@@ -45,7 +45,7 @@ def main():
     dp.shutdown.register(on_shutdown)
 
     dp.update.outer_middleware(BanAcceptCheck())
-    dp.update.outer_middleware(ThrottlingMiddleware())
+    dp.update.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(LanguageCheck())
 
     app = web.Application()

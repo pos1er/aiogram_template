@@ -11,8 +11,8 @@ import gettext
 
 class ThrottlingMiddleware(BaseMiddleware):
     caches = {
-        "admin": TTLCache(maxsize=10_000, ttl=0.5),
-        "default": TTLCache(maxsize=10_000, ttl=1)
+        "start": TTLCache(maxsize=10_000, ttl=2),
+        "default": TTLCache(maxsize=10_000, ttl=0.5)
     }
 
     async def __call__(
@@ -21,6 +21,7 @@ class ThrottlingMiddleware(BaseMiddleware):
             event: Update,
             data: Dict[str, Any],
     ) -> Any:
+        throttling_key = "default"
         throttling_key = get_flag(data, "throttling_key")
         if throttling_key is not None and throttling_key in self.caches:
             if data['event_from_user'].id in self.caches[throttling_key]:
@@ -55,6 +56,6 @@ class LanguageCheck(BaseMiddleware):
         else:
             user_language = user_language['language']
         translate = gettext.translation(
-            user_language, 'locales', languages=[user_language])
+            user_language, 'bot/locales', languages=[user_language])
         data['_'] = translate.gettext
         return await handler(event, data)

@@ -19,7 +19,7 @@ import time
 
 start_router = Router()
 start_router.message.filter(IsPrivate())
-
+flags = {'throttling_key': 'start'}
 
 @start_router.message(CommandStart(), NewUser())
 async def start_menu(message: Message, state: FSMContext, captcha: CaptchaService):
