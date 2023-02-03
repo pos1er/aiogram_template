@@ -100,7 +100,6 @@ class Payments:
     async def new_crypto_bot(self, request_num, asset):
         asset = asset.upper()
         amount_value = round(self.amount / float(await Utils().cryptocurrencies_price(asset, 'RUB')), 15)
-        print(amount_value)
         headers = {
             'Crypto-Pay-API-Token': crypto_bot_key
         }

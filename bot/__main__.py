@@ -15,8 +15,7 @@ from bot.utils.loggers import app_logger
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
 MAIN_BOT_PATH = "/test_bot"
-REDIS_DSN = "redis://localhost:6379/0"
-
+#DOCKER
 
 async def on_startup():
     app_logger.info('Bot startup')
