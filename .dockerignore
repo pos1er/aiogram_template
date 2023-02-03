@@ -1,7 +1,0 @@
-__pycache__/
-.vscode
-project_info/
-*.env
-*.session
-*.session-journal
-venv/
