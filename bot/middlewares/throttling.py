@@ -21,9 +21,9 @@ class ThrottlingMiddleware(BaseMiddleware):
             event: Update,
             data: Dict[str, Any],
     ) -> Any:
-        print(0)
         throttling_key = "default"
         throttling_key = get_flag(data, "throttling_key")
+        print(throttling_key)
         if throttling_key is not None and throttling_key in self.caches:
             print(1)
             if data['event_from_user'].id in self.caches[throttling_key]:
