@@ -28,13 +28,15 @@ async def start_menu(message: Message, state: FSMContext, captcha: CaptchaServic
         chat_id = message.chat.id
         user_id = message.from_user.id
         captcha_data = await captcha.generate_captcha()
+        data = await state.get_data()
+        old_salt = data.get("salt")
+        if old_salt:
+            await captcha.unlock_user(chat_id, user_id, old_salt)
         salt = await captcha.lock_user(
             chat_id, user_id, correct_code=captcha_data.correct_emoji_code
         )
         captcha_text = (
             "Привет 👋\n"
-            "Ты отправил(а) заявку на вступление в чат {chat}.\n"
-            "Но прежде чем я её одобрю, давай проверим, что ты действительно <b>человек</b>:\n"
             "Выбери <u>правильный вариант</u> в соответствии с заданием на картинке."
         ).format(chat=html.bold(message.chat.title) if message.chat.title else "")
         captcha_kb = generate_captcha_keyboard(
@@ -47,6 +49,7 @@ async def start_menu(message: Message, state: FSMContext, captcha: CaptchaServic
         await bot.send_photo(
             user_id, photo=captcha_photo, caption=captcha_text, reply_markup=captcha_kb
         )
+        await state.update_data({"salt": salt})
     else:
         await Users().add_new_user()
         start_text = f'''Welcome, {html.link(html.quote(message.from_user.full_name), f'tg://user?id={message.from_user.id}')}\n
