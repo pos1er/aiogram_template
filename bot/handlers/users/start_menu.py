@@ -16,7 +16,7 @@ from bot.loader import dp, bot
 from bot.mongodb import Users, Payments, MainGets, Admins
 import time
 
-
+# sds
 start_router = Router()
 start_router.message.filter(IsPrivate())
 flags = {"throttling_key": "start"}
