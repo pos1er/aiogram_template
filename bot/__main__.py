@@ -3,6 +3,7 @@ from aiogram.webhook.aiohttp_server import (
     SimpleRequestHandler,
     setup_application,
 )
+from aiogram.utils.chat_action import ChatActionMiddleware
 
 from captcha.misc.configure import configure_logging, configure_services
 
@@ -47,6 +48,7 @@ def main():
     dp.update.outer_middleware(BanAcceptCheck())
     dp.update.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(LanguageCheck())
+    dp.update.middleware.register(ChatActionMiddleware())
 
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp,
