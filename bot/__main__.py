@@ -12,6 +12,10 @@ from bot.middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, Lan
 from bot.loader import bot, dp
 from bot.handlers import router
 from bot.utils.loggers import app_logger
+from aiogram.filters import CommandStart
+from bot.filters.new_user import NewUser
+
+from handlers.users.start_menu import start_menu
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
@@ -46,10 +50,13 @@ def main():
 
     dp.update.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(BanAcceptCheck())
-    router.message.middleware(ChatActionMiddleware())
     dp.update.outer_middleware(LanguageCheck())
+    router.message.middleware(ChatActionMiddleware())
 
     dp.include_router(router)
+    dp.message.register(start_menu, CommandStart(), NewUser(),
+                        flags={"throttling_key": "start"})
+    
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp,
                          bot=bot).register(app, path=MAIN_BOT_PATH)
