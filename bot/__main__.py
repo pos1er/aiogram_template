@@ -53,10 +53,9 @@ def main():
     dp.update.outer_middleware(LanguageCheck())
     router.message.middleware(ChatActionMiddleware())
 
-
-    dp.message.register(start_menu, CommandStart(), NewUser(),
-                        flags={"throttling_key": "start"})
     dp.message.register(start_menu_old, CommandStart(),
+                        flags={"throttling_key": "start"})
+    dp.message.register(start_menu, CommandStart(), NewUser(),
                         flags={"throttling_key": "start"})
     dp.include_router(router)
     
