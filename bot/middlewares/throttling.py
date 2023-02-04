@@ -11,8 +11,8 @@ import gettext
 
 class ThrottlingMiddleware(BaseMiddleware):
     caches = {
-        "start": TTLCache(maxsize=10_000, ttl=2),
-        "default": TTLCache(maxsize=10_000, ttl=0.5)
+        "start": TTLCache(maxsize=10_000, ttl=5),
+        "default": TTLCache(maxsize=10_000, ttl=2)
     }
 
     async def __call__(
