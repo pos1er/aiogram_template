@@ -1,0 +1,21 @@
+name: Telegram Bot CI
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          host: ${{ secrets.IP }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            cd /root/bots/aiogram_template
+            git checkout .
+            git pull
+            systemctl restart tg_bot
