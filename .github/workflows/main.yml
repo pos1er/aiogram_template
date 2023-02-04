@@ -10,11 +10,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        uses: pos1er/aiogram_template@main
         with:
           host: ${{ secrets.IP }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           script: |
+            echo "Hello world!"
             cd /root/bots/aiogram_template
             git checkout .
             git pull
