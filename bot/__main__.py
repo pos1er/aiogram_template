@@ -40,16 +40,16 @@ async def on_shutdown():
 
 def main():
     configure_logging()
-    dp.include_router(router)
 
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
 
     dp.update.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(BanAcceptCheck())
-    dp.message.middleware(ChatActionMiddleware())
+    router.message.middleware(ChatActionMiddleware())
     dp.update.outer_middleware(LanguageCheck())
 
+    dp.include_router(router)
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp,
                          bot=bot).register(app, path=MAIN_BOT_PATH)
