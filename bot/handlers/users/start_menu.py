@@ -16,11 +16,10 @@ from bot.loader import dp, bot
 from bot.mongodb import Users, Payments, MainGets, Admins
 import time
 
-# as
 start_router = Router()
 start_router.message.filter(IsPrivate())
 
-# @start_router.message(CommandStart(), NewUser(), flags={"throttling_key": "start"})
+@start_router.message(CommandStart(), NewUser(), flags={"throttling_key": "start"})
 async def start_menu(message: Message, state: FSMContext, captcha: CaptchaService):
     time.sleep(2)
     captcha_status = await MainGets().captcha_status()
@@ -58,7 +57,7 @@ async def start_menu(message: Message, state: FSMContext, captcha: CaptchaServic
         await state.set_state(UserStates.language_choice)
 
 
-# @start_router.message(CommandStart())
+@start_router.message(CommandStart())
 async def start_menu_old(message: Message, state: FSMContext, _):
     await state.clear()
     start_text = _('start_text')
@@ -78,7 +77,7 @@ async def language_choice(callback_query: CallbackQuery, _):
 
 
 @start_router.message(Command("test"))
-async def start_menu(message: Message, state: FSMContext, _):
+async def test_menu(message: Message, state: FSMContext, _):
     start_text = _('start_text')
     await bot.send_message(text=start_text, chat_id=message.from_user.id)
     data = await state.get_data()
