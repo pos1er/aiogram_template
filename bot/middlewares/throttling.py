@@ -24,7 +24,6 @@ class ThrottlingMiddleware(BaseMiddleware):
             data: Dict[str, Any],
     ) -> Any:
         throttling_key = get_flag(data, "throttling_key", default="default")
-        app_logger.warning(throttling_key)
         if throttling_key is not None and throttling_key in self.caches:
             if data['event_from_user'].id in self.caches[throttling_key]:
                 return

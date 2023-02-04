@@ -48,7 +48,8 @@ def main():
     dp.startup.register(on_startup)
     dp.shutdown.register(on_shutdown)
 
-    dp.update.middleware(ThrottlingMiddleware())
+    dp.message.middleware(ThrottlingMiddleware())
+    dp.callback_query.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(BanAcceptCheck())
     dp.update.outer_middleware(LanguageCheck())
     router.message.middleware(ChatActionMiddleware())

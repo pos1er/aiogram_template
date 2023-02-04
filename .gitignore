@@ -5,3 +5,4 @@ project_info/
 *.session
 *.session-journal
 venv/
+mre.py

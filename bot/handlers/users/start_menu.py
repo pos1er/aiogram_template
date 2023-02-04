@@ -56,7 +56,7 @@ async def start_menu(message: Message, state: FSMContext, captcha: CaptchaServic
         await state.set_state(UserStates.language_choice)
 
 
-@start_router.message(CommandStart())
+@start_router.message(CommandStart(), flags={"throttling_key": "start"})
 async def start_menu_old(message: Message, state: FSMContext, _):
     await state.clear()
     start_text = _('start_text')
