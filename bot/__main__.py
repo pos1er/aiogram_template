@@ -48,7 +48,7 @@ def main():
     dp.update.outer_middleware(BanAcceptCheck())
     dp.update.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(LanguageCheck())
-    dp.update.middleware.register(ChatActionMiddleware())
+    dp.update.middleware(ChatActionMiddleware())
 
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp,
