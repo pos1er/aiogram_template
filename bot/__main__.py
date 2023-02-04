@@ -15,7 +15,7 @@ from bot.utils.loggers import app_logger
 from aiogram.filters import CommandStart
 from bot.filters.new_user import NewUser
 
-from bot.handlers.users.start_menu import start_menu
+from bot.handlers.users.start_menu import start_menu, start_menu_old
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
@@ -55,6 +55,8 @@ def main():
 
 
     dp.message.register(start_menu, CommandStart(), NewUser(),
+                        flags={"throttling_key": "start"})
+    dp.message.register(start_menu_old, CommandStart(),
                         flags={"throttling_key": "start"})
     dp.include_router(router)
     
