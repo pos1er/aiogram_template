@@ -15,7 +15,7 @@ from bot.utils.loggers import app_logger
 from aiogram.filters import CommandStart
 from bot.filters.new_user import NewUser
 
-from handlers.users.start_menu import start_menu
+from bot.handlers.users.start_menu import start_menu
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
