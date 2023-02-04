@@ -47,7 +47,7 @@ def main():
 
     dp.update.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(BanAcceptCheck())
-    dp.update.middleware(ChatActionMiddleware())
+    dp.message.middleware(ChatActionMiddleware())
     dp.update.outer_middleware(LanguageCheck())
 
     app = web.Application()
