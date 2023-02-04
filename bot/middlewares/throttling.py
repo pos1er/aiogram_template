@@ -22,6 +22,8 @@ class ThrottlingMiddleware(BaseMiddleware):
             data: Dict[str, Any],
     ) -> Any:
         throttling_key = get_flag(data, "throttling_key", default="default")
+        print(data)
+        print(throttling_key)
         #  Потом сделать, чтобы для старта работало
         if throttling_key is not None and throttling_key in self.caches:
             print(1)
