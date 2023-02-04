@@ -10,6 +10,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Trying to deploy
+        uses: pos1er/aiogram_template@main
         with:
           host: ${{ secrets.IP }}
           username: ${{ secrets.USERNAME }}
