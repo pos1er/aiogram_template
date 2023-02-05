@@ -75,6 +75,7 @@ async def start_menu_old(message: Message, state: FSMContext):
 @start_router.callback_query(lambda c: c.data in ['en', 'ru', 'de', 'ua'], StateFilter(UserStates.language_choice))
 async def language_choice(callback_query: CallbackQuery):
     import gettext
+    print(WORKDIR / 'locales')
     _ = gettext.translation(
         callback_query.data, WORKDIR.parent / 'locales', languages=[callback_query.data]).gettext
     await callback_query.answer()
