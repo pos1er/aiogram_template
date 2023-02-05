@@ -4,6 +4,7 @@ from aiogram.types import Message, CallbackQuery, ContentType, InputMediaVideo, 
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.i18n import lazy_gettext as __
 from aiogram import html, Router, F
+from bot.utils.workdir import WORKDIR
 
 from captcha.misc.filename_utils import generate_captcha_image_filename
 from captcha.misc.kb_generators import generate_captcha_keyboard
@@ -71,15 +72,15 @@ async def start_menu_old(message: Message, state: FSMContext):
     await state.update_data({'a': 'aaaaa'})
 
 
-# @start_router.callback_query(F.data in ['en', 'ru', 'de'], StateFilter(UserStates.language_choice))
-# async def language_choice(callback_query: CallbackQuery):
-#     import gettext
-#     _ = gettext.translation(
-#         callback_query.data, 'locales', languages=[callback_query.data]).gettext
-#     await callback_query.answer()
-#     await Users().set_language(callback_query.data)
-#     start_text = _('start_text')
-#     await bot.edit_message_text(text=start_text, chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
+@start_router.callback_query(F.data in ['en', 'ru', 'de', 'ua'], StateFilter(UserStates.language_choice))
+async def language_choice(callback_query: CallbackQuery):
+    import gettext
+    _ = gettext.translation(
+        callback_query.data, WORKDIR / 'locales', languages=[callback_query.data]).gettext
+    await callback_query.answer()
+    await Users().set_language(callback_query.data)
+    start_text = _('start_text')
+    await bot.edit_message_text(text=start_text, chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
 
 
 @start_router.message(F.text == __('тест'))
