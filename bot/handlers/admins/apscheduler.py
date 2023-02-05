@@ -1,5 +1,5 @@
 from aiogram import Bot
-from mongodb import MainGets
+from bot.mongodb import MainGets
 
 '''
 After start bot message

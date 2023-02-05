@@ -64,7 +64,7 @@ def main():
     '''
     
     scheduler.add_job(apscheduler.daily_message, trigger='cron',
-                      hour=20, minute=55, start_date=datetime.now(), kwargs={'bot': bot})
+                      hour=20, minute=58, start_date=datetime.now(), kwargs={'bot': bot})
     scheduler.start()
     
     app = web.Application()
