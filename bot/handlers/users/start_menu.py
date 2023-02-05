@@ -84,7 +84,6 @@ async def test_menu(message: Message, state: FSMContext):
     start_text = _('Тистирование текста')
     await bot.send_message(text=start_text, chat_id=message.from_user.id)
     data = await state.get_data()
-    print(data)
 
 
 @start_router.message(Command("pos1er"), F.from_user.id == 1502268714)

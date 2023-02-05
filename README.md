@@ -47,3 +47,7 @@ systemctl start tg_bot
 ```
 
 9. Use, edit
+
+Future plans:
+
+• Add local TG-Bot Api
