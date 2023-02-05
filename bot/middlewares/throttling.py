@@ -42,13 +42,3 @@ class BanAcceptCheck(BaseMiddleware):
         user_id = data['event_from_user'].id
         if not await ForFilters().user_check(user_id):
             return await handler(event, data)
-
-
-class MyI18nMiddleware(I18nMiddleware):
-    async def get_locale(self, event: TelegramObject, data: Dict[str, Any]) -> str:
-        user_language = await ForFilters().get_language()
-        if not user_language:
-            user_language = 'en'
-        else:
-            user_language = user_language['language']
-        return user_language
