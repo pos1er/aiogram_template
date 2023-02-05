@@ -15,7 +15,7 @@ jobstores = {
                              db=2,
                              port=6379)
 }
-scheduler = AsyncIOScheduler()
+scheduler = AsyncIOScheduler(timezone='Etc/UTC')
 # scheduler = ContextSchedulerDecorator(AsyncIOScheduler(jobstores=jobstores))
 # scheduler.ctx.add_instance(bot, declared_class=Bot)
 #  storage = MemoryStorage()
