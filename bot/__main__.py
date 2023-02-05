@@ -56,7 +56,7 @@ def main():
     dp.update.outer_middleware(BanAcceptCheck())
     
     # dp.update.outer_middleware(LanguageCheck())
-    i18n = I18n(path=WORKDIR / "locales", default_locale='en', domain='messages')
+    i18n = I18n(path=WORKDIR / "locales", default_locale='ru', domain='messages')
     dp.update.outer_middleware(MyI18nMiddleware(i18n=i18n))
     router.message.middleware(ChatActionMiddleware())
 
