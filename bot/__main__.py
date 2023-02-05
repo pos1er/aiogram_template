@@ -30,12 +30,15 @@ async def on_startup():
     dp.workflow_data.update(services)
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
 
+    '''
     scheduler.add_job(apscheduler.send_message_interval,
-                      trigger='interval', seconds=10, kwargs={'bot': bot})
+                      trigger='interval', seconds=10)
+                      
     scheduler.add_job(apscheduler.send_message_time, trigger='date',
-                      run_date=datetime.now() + timedelta(seconds=10), kwargs={'bot': bot})
+                      run_date=datetime.now() + timedelta(seconds=10))
+    '''
     scheduler.add_job(apscheduler.daily_message, trigger='cron',
-                      hour=datetime.now().hour, minute=datetime.now().minute + 1, start_date=datetime.now(), kwargs={'bot': bot})
+                      hour=datetime.now().hour, minute=datetime.now().minute + 1, start_date=datetime.now())
     scheduler.start()
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
@@ -64,13 +67,8 @@ def main():
     dp.update.outer_middleware(MyI18nMiddleware(i18n=i18n))
     
     dp.include_router(router)
-    
-    '''
-    
-    scheduler.add_job(apscheduler.send_message_interval, trigger='interval', seconds=60)
-    '''
-    
-    
+
+
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp,
                          bot=bot).register(app, path=MAIN_BOT_PATH)
