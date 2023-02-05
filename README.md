@@ -1,5 +1,5 @@
-Template telegram bot example
-==============================
+Template Telegram Bot with Webhooks, CaptchaProtect, Throttling, AdminPanel, I18n internationalization
+==================================================
 
 ### How to start
 
