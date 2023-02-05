@@ -7,7 +7,6 @@ from aiogram.types import TelegramObject, Message, CallbackQuery, Update
 from aiogram.dispatcher.flags import get_flag
 from bot.mongodb import ForFilters
 from cachetools import TTLCache
-import gettext
 
 from bot.utils.loggers import app_logger
 
@@ -45,24 +44,6 @@ class BanAcceptCheck(BaseMiddleware):
             return await handler(event, data)
 
 
-class LanguageCheck(BaseMiddleware):
-    async def __call__(
-        self,
-        handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
-        event: Update,
-        data: Dict[str, Any]
-    ) -> Any:
-        user_language = await ForFilters().get_language()
-        if not user_language:
-            user_language = 'en'
-        else:
-            user_language = user_language['language']
-        translate = gettext.translation(
-            user_language, 'bot/locales', languages=[user_language])
-        data['_'] = translate.gettext
-        return await handler(event, data)
-
-
 class MyI18nMiddleware(I18nMiddleware):
     async def get_locale(self, event: TelegramObject, data: Dict[str, Any]) -> str:
         user_language = await ForFilters().get_language()
@@ -70,5 +51,4 @@ class MyI18nMiddleware(I18nMiddleware):
             user_language = 'en'
         else:
             user_language = user_language['language']
-        app_logger.warning(user_language)
         return user_language
