@@ -80,7 +80,7 @@ async def language_choice(callback_query: CallbackQuery):
     #     'messages', WORKDIR.parent / 'locales', languages=[callback_query.data]).gettext
     await callback_query.answer()
     await Users().set_language(callback_query.data)
-    start_text = _('start_text')
+    start_text = _('Стартовий текст')
     await bot.edit_message_text(text=start_text, chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
 
 
