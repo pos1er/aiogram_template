@@ -22,4 +22,5 @@ jobs:
             git checkout .
             git pull
             pip3 install -r requirements.txt
+            pybabel compile -d bot/locales -D messages
             systemctl restart tg_bot

@@ -9,3 +9,4 @@ cachetools
 arq
 pathLib
 Babel
+PyBabel
