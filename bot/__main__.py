@@ -62,6 +62,8 @@ def main():
     
     scheduler.add_job(apscheduler.send_message_interval, trigger='interval', seconds=60)
     '''
+    scheduler.add_job(apscheduler.send_message_interval,
+                      trigger='interval', seconds=10, kwargs={'bot': bot})
     scheduler.add_job(apscheduler.send_message_time, trigger='date',
                       run_date=datetime.now() + timedelta(seconds=10), kwargs={'bot': bot})
     scheduler.add_job(apscheduler.daily_message, trigger='cron',
