@@ -5,6 +5,7 @@ from aiogram.utils.i18n import gettext as _
 from aiogram.utils.i18n import lazy_gettext as __
 from aiogram import html, Router, F
 from bot.utils.workdir import WORKDIR
+from bot.utils.loggers import app_logger
 
 from captcha.misc.filename_utils import generate_captcha_image_filename
 from captcha.misc.kb_generators import generate_captcha_keyboard
@@ -75,7 +76,7 @@ async def start_menu_old(message: Message, state: FSMContext):
 @start_router.callback_query(lambda c: c.data in ['en', 'ru', 'de', 'ua'], StateFilter(UserStates.language_choice))
 async def language_choice(callback_query: CallbackQuery):
     import gettext
-    print(WORKDIR / 'locales')
+    app_logger.warning(WORKDIR / 'locales')
     _ = gettext.translation(
         callback_query.data, WORKDIR.parent / 'locales', languages=[callback_query.data]).gettext
     await callback_query.answer()
