@@ -1,3 +1,3 @@
-from pathLib import Path
+from pathlib import Path
 
 WORKDIR = Path(__file__).parent.parent
