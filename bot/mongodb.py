@@ -272,7 +272,7 @@ class MainGets:
         return db_data.find_one({'id': 1})['captcha_status']
     
     async def get_admins_list(self, selection: str = 'status') -> List:
-        return list(admins.find({selection: True}, {'_id': False, 'id': True}))
+        return list(admins.find({selection: True}, {'_id': False, 'user_id': True}))
         
 
 class MainEdits:
