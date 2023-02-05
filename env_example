@@ -1,6 +1,9 @@
-TOKEN=5555555555:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+MAIN_TOKEN=5555555555:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 MONGODB_LINK=mongodb+srv://login:password@database.mongodb.net/test?retryWrites=true&w=majority
 CRYSTAL_PAY_KEY=key from crystalpay
 PUBLIC_KEY_PAYID19=public key from payid19
 PRIVATE_KEY_PAYID19=private key from payid19
 CRYPTO_BOT_KEY=key from cryptobot(pay)
+BASE_URL=https://domain.com
+CAPTCHA_DURATION=30
+REDIS_URL=redis://localhost:6379/0

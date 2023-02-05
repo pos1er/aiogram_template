@@ -10,3 +10,4 @@ arq
 pathLib
 Babel
 PyBabel
+apscheduler

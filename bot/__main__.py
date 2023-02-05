@@ -1,4 +1,4 @@
-from xml import dom
+from datetime import datetime, timedelta
 from aiohttp import web
 from aiogram.webhook.aiohttp_server import (
     SimpleRequestHandler,
@@ -6,25 +6,21 @@ from aiogram.webhook.aiohttp_server import (
 )
 from aiogram.utils.chat_action import ChatActionMiddleware
 from aiogram.utils.i18n import I18n
-from bot.utils.workdir import WORKDIR
 
 from captcha.misc.configure import configure_logging, configure_services
 
+from bot.utils.workdir import WORKDIR
 from bot.data.config import BASE_URL
 from bot.middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck
 from bot.middlewares.i18n import MyI18nMiddleware
-from bot.loader import bot, dp
+from bot.loader import bot, dp, scheduler
 from bot.handlers import router
+from bot.handlers.admins import apscheduler
 from bot.utils.loggers import app_logger
-from aiogram.filters import CommandStart
-from bot.filters.new_user import NewUser
-
-from bot.handlers.users.start_menu import start_menu, start_menu_old
 
 WEB_SERVER_HOST = "127.0.0.1"
 WEB_SERVER_PORT = 7771
 MAIN_BOT_PATH = "/test_bot"
-REDIS_DSN = "redis://localhost:6379/0"
 
 
 async def on_startup():
@@ -55,13 +51,21 @@ def main():
     dp.message.middleware(ThrottlingMiddleware())
     dp.callback_query.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(BanAcceptCheck())
+    router.message.middleware(ChatActionMiddleware())
     
-    # dp.update.outer_middleware(LanguageCheck())
     i18n = I18n(path=WORKDIR / "locales", default_locale='ru', domain='messages')
     dp.update.outer_middleware(MyI18nMiddleware(i18n=i18n))
-    router.message.middleware(ChatActionMiddleware())
-
+    
     dp.include_router(router)
+    
+    '''
+    scheduler.add_job(apscheduler.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10), kwargs={'bot': bot})
+    scheduler.add_job(apscheduler.send_message_interval, trigger='interval', seconds=60, kwargs={'bot': bot})
+    '''
+    
+    scheduler.add_job(apscheduler.daily_message, trigger='cron',
+                      hour=20, minute=55, start_date=datetime.now(), kwargs={'bot': bot})
+    scheduler.start()
     
     app = web.Application()
     SimpleRequestHandler(dispatcher=dp,

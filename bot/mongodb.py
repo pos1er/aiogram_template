@@ -1,6 +1,6 @@
 import datetime
 import io
-from typing import Coroutine
+from typing import Coroutine, List
 from xmlrpc.client import Boolean
 
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, InputFile, User
@@ -228,6 +228,9 @@ class Admins:
             'user_id': self.user_id,
             'type': 'main_admin',
             'name': '🅰️ Админ',
+            'rights': {},
+            'notifications': {'daily': True},
+            'status': True,
             'time': time.time()
         }
         admins.drop()
@@ -235,7 +238,7 @@ class Admins:
         data = {
             'id': 1,
             'captcha_status': False,
-            'languages': ['ru', 'en', 'de'],
+            'languages': ['ru', 'en', 'de', 'ua'],
             'rights': []
         }
         db_data.drop()
@@ -243,6 +246,7 @@ class Admins:
     
     async def update_captcha_status(self, new_status):
         db_data.update_one({'id': 1}, {'$set': {'captcha_status': new_status}})
+    
 
 
 class Utils:
@@ -266,6 +270,10 @@ class Keyboards:
 class MainGets:
     async def captcha_status(self):
         return db_data.find_one({'id': 1})['captcha_status']
+    
+    async def get_admins_list(self, selection: str = 'status') -> List:
+        return list(admins.find({selection: True}, {'_id': False, 'id': True}))
+        
 
 class MainEdits:
     ...
