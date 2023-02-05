@@ -8,7 +8,7 @@ language_menu = InlineKeyboardMarkup(inline_keyboard=[
     ],
     [
         InlineKeyboardButton(text="🇬🇧 English", callback_data="en"),
-        InlineKeyboardButton(text="🇩🇪 Deutsche", callback_data="de")
+        InlineKeyboardButton(text="🇩🇪 Deutsch", callback_data="de")
     ],
 ])
 

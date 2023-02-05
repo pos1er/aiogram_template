@@ -11,7 +11,7 @@ from bot.utils.workdir import WORKDIR
 from captcha.misc.configure import configure_logging, configure_services
 
 from bot.data.config import BASE_URL
-from bot.middlewares.throttling import MyI18nMiddleware, ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
+from bot.middlewares.throttling import MyI18nMiddleware, ThrottlingMiddleware, BanAcceptCheck
 from bot.loader import bot, dp
 from bot.handlers import router
 from bot.utils.loggers import app_logger
