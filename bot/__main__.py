@@ -6,6 +6,7 @@ from aiogram.webhook.aiohttp_server import (
 )
 from aiogram.utils.chat_action import ChatActionMiddleware
 from aiogram.utils.i18n import I18n
+from bot.utils.workdir import WORKDIR
 
 from captcha.misc.configure import configure_logging, configure_services
 
@@ -55,7 +56,7 @@ def main():
     dp.update.outer_middleware(BanAcceptCheck())
     
     # dp.update.outer_middleware(LanguageCheck())
-    i18n = I18n(path="bot/locales", default_locale='en', domain='messages')
+    i18n = I18n(path=WORKDIR / "locales", default_locale='en', domain='messages')
     dp.update.outer_middleware(MyI18nMiddleware(i18n=i18n))
     router.message.middleware(ChatActionMiddleware())
 

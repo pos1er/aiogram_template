@@ -7,3 +7,4 @@ redis
 python-dotenv
 cachetools
 arq
+pathLib
