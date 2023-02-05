@@ -25,14 +25,18 @@ pip install -r requirements.txt
 
 4. Create and fill `.env` file ([example](env_example))
 
-5. To use mulit-language, run the `run.bat` file after you've worked through the whole bot
+5. Add a 2 services to your linux machine ([example](tg_bot.example.service)) ([example](tg_captcha.example.service))
 
-It will create a `.pot` file with a translation template, then create a compiled translation using a program, such as `Poedit`
+6. Turn on services
+
+```shell
+systemctl enable tg_bot
+```
 
 6. Start bot to check
 
 ```shell
-python3 app.py
+systemctl start tg_bot
 ```
 
 7. Use, edit

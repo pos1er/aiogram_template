@@ -7,3 +7,4 @@ project_info/
 venv/
 mre.py
 *.mo
+/dev

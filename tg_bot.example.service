@@ -1,0 +1,13 @@
+[Unit]
+Description=Telegram Bot
+Requires=tg_captcha.service
+
+[Service]
+WorkingDirectory=/root/bots/aiogram_template
+User=root
+ExecStart=python3 -m bot
+Restart=on-failure
+
+[Install]
+WantedBy=multiuser.target
+EOF
