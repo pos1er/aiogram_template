@@ -56,10 +56,10 @@ async def start_menu(message: Message, state: FSMContext, captcha: CaptchaServic
     else:
         await Users().add_new_user()
         start_text = f'''
-Welcome, {html.link(html.quote(message.from_user.full_name), f'tg://user?id={message.from_user.id}')}\n
-{html.bold('🔔 Please select a language:')}
 Приветствуем, {html.link(html.quote(message.from_user.full_name), f'tg://user?id={message.from_user.id}')}\n
-{html.bold('🔔 Пожалуйста, выбери язык:')}'''
+{html.bold('🔔 Пожалуйста, выбери язык:')}\n
+Welcome, {html.link(html.quote(message.from_user.full_name), f'tg://user?id={message.from_user.id}')}\n
+{html.bold('🔔 Please select a language:')}'''
         await message.answer(text=start_text, reply_markup=language_menu)
         await state.set_state(UserStates.language_choice)
 
@@ -76,7 +76,7 @@ async def start_menu_old(message: Message, state: FSMContext):
 async def language_choice(callback_query: CallbackQuery):
     import gettext
     _ = gettext.translation(
-        callback_query.data, WORKDIR / 'locales', languages=[callback_query.data]).gettext
+        callback_query.data, WORKDIR.parent / 'locales', languages=[callback_query.data]).gettext
     await callback_query.answer()
     await Users().set_language(callback_query.data)
     start_text = _('start_text')

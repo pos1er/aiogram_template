@@ -3,10 +3,11 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 language_menu = InlineKeyboardMarkup(inline_keyboard=[
     [
         InlineKeyboardButton(text="🇷🇺 Русский", callback_data="ru"),
-        InlineKeyboardButton(text="🇬🇧 English", callback_data="en")
+        InlineKeyboardButton(text="🇺🇦 Українська", callback_data="ua")
+        
     ],
     [
-        InlineKeyboardButton(text="🇺🇦 Українська", callback_data="ua"),
+        InlineKeyboardButton(text="🇬🇧 English", callback_data="en"),
         InlineKeyboardButton(text="🇩🇪 Deutsche", callback_data="de")
     ],
 ])
