@@ -1,5 +1,4 @@
-from time import timezone
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.redis import RedisStorage
 from bot.data.config import MAIN_TOKEN, REDIS_URL
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -15,9 +14,10 @@ jobstores = {
                              db=2,
                              port=6379)
 }
-# scheduler = AsyncIOScheduler(timezone='Etc/UTC')
 scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Etc/UTC', jobstores=jobstores))
 scheduler.ctx.add_instance(bot, declared_class=Bot)
+
 #  storage = MemoryStorage()
 # loop = asyncio.get_event_loop()
+
 dp = Dispatcher(storage=storage)

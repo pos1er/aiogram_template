@@ -1,14 +1,11 @@
 import asyncio
 
-from typing import Callable, Dict, Any, Awaitable, Union
+from typing import Callable, Dict, Any, Awaitable
 from aiogram import BaseMiddleware
-from aiogram.utils.i18n import I18nMiddleware
-from aiogram.types import TelegramObject, Message, CallbackQuery, Update
+from aiogram.types import Update
 from aiogram.dispatcher.flags import get_flag
 from bot.mongodb import ForFilters
 from cachetools import TTLCache
-
-from bot.utils.loggers import app_logger
 
 
 class ThrottlingMiddleware(BaseMiddleware):

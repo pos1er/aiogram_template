@@ -1,7 +1,6 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import Message
 from bot.mongodb import ForFilters
-import time
 
 
 class AdminFilter(BaseFilter):

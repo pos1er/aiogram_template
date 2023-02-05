@@ -4,8 +4,6 @@ from aiogram.types import Message, CallbackQuery, ContentType, InputMediaVideo, 
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.i18n import lazy_gettext as __
 from aiogram import html, Router, F
-from bot.utils.workdir import WORKDIR
-from bot.utils.loggers import app_logger
 
 from captcha.misc.filename_utils import generate_captcha_image_filename
 from captcha.misc.kb_generators import generate_captcha_keyboard
