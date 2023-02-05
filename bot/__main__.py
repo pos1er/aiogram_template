@@ -1,14 +1,16 @@
+from xml import dom
 from aiohttp import web
 from aiogram.webhook.aiohttp_server import (
     SimpleRequestHandler,
     setup_application,
 )
 from aiogram.utils.chat_action import ChatActionMiddleware
+from aiogram.utils.i18n import I18n
 
 from captcha.misc.configure import configure_logging, configure_services
 
 from bot.data.config import BASE_URL
-from bot.middlewares.throttling import ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
+from bot.middlewares.throttling import MyI18nMiddleware, ThrottlingMiddleware, BanAcceptCheck, LanguageCheck
 from bot.loader import bot, dp
 from bot.handlers import router
 from bot.utils.loggers import app_logger
@@ -51,7 +53,10 @@ def main():
     dp.message.middleware(ThrottlingMiddleware())
     dp.callback_query.middleware(ThrottlingMiddleware())
     dp.update.outer_middleware(BanAcceptCheck())
-    dp.update.outer_middleware(LanguageCheck())
+    
+    # dp.update.outer_middleware(LanguageCheck())
+    i18n = I18n(path="bot/locales", default_locale='en', domain='messages')
+    dp.update.outer_middleware(MyI18nMiddleware(i18n=i18n))
     router.message.middleware(ChatActionMiddleware())
 
     dp.include_router(router)

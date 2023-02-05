@@ -1,6 +1,7 @@
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import CommandStart, Text, StateFilter, Command
 from aiogram.types import Message, CallbackQuery, ContentType, InputMediaVideo, InputFile, InputMediaPhoto, URLInputFile, BufferedInputFile
+from aiogram.utils.i18n import gettext as _
 from aiogram import html, Router, F
 
 from captcha.misc.filename_utils import generate_captcha_image_filename
@@ -57,26 +58,26 @@ async def start_menu(message: Message, state: FSMContext, captcha: CaptchaServic
 
 
 @start_router.message(CommandStart(), flags={"throttling_key": "start"})
-async def start_menu_old(message: Message, state: FSMContext, _):
+async def start_menu_old(message: Message, state: FSMContext):
     await state.clear()
     start_text = _('start_text')
     await message.answer(text=start_text)
     await state.update_data({'a': 'aaaaa'})
 
 
-@start_router.callback_query(lambda x: x.data in ['en', 'ru'], StateFilter(UserStates.language_choice))
-async def language_choice(callback_query: CallbackQuery, _):
-    import gettext
-    _ = gettext.translation(
-        callback_query.data, 'locales', languages=[callback_query.data]).gettext
-    await callback_query.answer()
-    await Users().set_language(callback_query.data)
-    start_text = _('start_text')
-    await bot.edit_message_text(text=start_text, chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
+# @start_router.callback_query(lambda x: x.data in ['en', 'ru'], StateFilter(UserStates.language_choice))
+# async def language_choice(callback_query: CallbackQuery):
+#     import gettext
+#     _ = gettext.translation(
+#         callback_query.data, 'locales', languages=[callback_query.data]).gettext
+#     await callback_query.answer()
+#     await Users().set_language(callback_query.data)
+#     start_text = _('start_text')
+#     await bot.edit_message_text(text=start_text, chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
 
 
 @start_router.message(Command("test"))
-async def test_menu(message: Message, state: FSMContext, _):
+async def test_menu(message: Message, state: FSMContext):
     start_text = _('start_text')
     await bot.send_message(text=start_text, chat_id=message.from_user.id)
     data = await state.get_data()
