@@ -11,3 +11,4 @@ pathLib
 Babel
 PyBabel
 apscheduler
+apscheduler_di

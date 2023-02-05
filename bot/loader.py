@@ -4,6 +4,7 @@ from aiogram.fsm.storage.redis import RedisStorage
 from bot.data.config import MAIN_TOKEN, REDIS_URL
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.jobstores.redis import RedisJobStore
+from apscheduler_di import ContextSchedulerDecorator
 
 bot = Bot(token=MAIN_TOKEN, parse_mode='HTML')
 storage = RedisStorage.from_url(REDIS_URL)
@@ -14,7 +15,8 @@ jobstores = {
                              db=2,
                              port=6379)
 }
-scheduler = AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores)
+scheduler = ContextSchedulerDecorator(AsyncIOScheduler(timezone='Europe/Moscow', jobstores=jobstores))
+scheduler.ctx.add_instance(bot, declared_class=Bot)
 #  storage = MemoryStorage()
 # loop = asyncio.get_event_loop()
 dp = Dispatcher(storage=storage)

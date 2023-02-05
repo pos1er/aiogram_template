@@ -59,12 +59,12 @@ def main():
     dp.include_router(router)
     
     '''
-    scheduler.add_job(apscheduler.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10), kwargs={'bot': bot})
-    scheduler.add_job(apscheduler.send_message_interval, trigger='interval', seconds=60, kwargs={'bot': bot})
+    scheduler.add_job(apscheduler.send_message_time, trigger='date', run_date=datetime.now() + timedelta(seconds=10))
+    scheduler.add_job(apscheduler.send_message_interval, trigger='interval', seconds=60)
     '''
     
     scheduler.add_job(apscheduler.daily_message, trigger='cron',
-                      hour=datetime.now().hour, minute=datetime.now().minute + 1, start_date=datetime.now(), kwargs={'bot': bot})
+                      hour=datetime.now().hour, minute=datetime.now().minute + 1, start_date=datetime.now())
     scheduler.start()
     
     app = web.Application()
