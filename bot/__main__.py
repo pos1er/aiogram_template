@@ -38,7 +38,7 @@ async def on_startup():
                       run_date=datetime.now() + timedelta(seconds=10))
     '''
     scheduler.add_job(apscheduler.daily_message, trigger='cron',
-                      hour=datetime.now().hour, minute=datetime.now().minute + 1, start_date=datetime.now())
+                      hour=0, minute=0, start_date=datetime.now())
     scheduler.start()
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
