@@ -37,6 +37,7 @@ pybabel compile -d bot/locales -D messages
 
 ```shell
 systemctl enable tg_bot
+systemctl enable tg_captcha
 ```
 
 8. Start bot to check
