@@ -41,7 +41,7 @@ async def on_startup():
                       hour=0, minute=30)
     scheduler.start()
     scheduler.remove_all_jobs()
-    scheduler.print_jobs(out='123.txt')
+    scheduler.print_jobs()
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 async def on_shutdown():
