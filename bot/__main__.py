@@ -30,6 +30,7 @@ async def on_startup():
     dp.workflow_data.update(services)
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
 
+    scheduler.remove_all_jobs()
     '''
     scheduler.add_job(apscheduler.send_message_interval,
                       trigger='interval', seconds=10)
