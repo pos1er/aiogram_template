@@ -40,7 +40,7 @@ async def on_startup():
     scheduler.start()
     scheduler.remove_all_jobs()
     scheduler.add_job(apscheduler.daily_message, trigger='cron', day='*',
-                      hour=0, minute=43)
+                      hour=21, minute=47)
     app_logger.warning(scheduler.get_jobs())
     
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
