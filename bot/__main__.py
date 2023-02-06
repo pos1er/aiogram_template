@@ -30,7 +30,6 @@ async def on_startup():
     dp.workflow_data.update(services)
     await bot.set_webhook(f"{BASE_URL}{MAIN_BOT_PATH}")
 
-    scheduler.remove_all_jobs()
     '''
     scheduler.add_job(apscheduler.send_message_interval,
                       trigger='interval', seconds=10)
@@ -38,9 +37,11 @@ async def on_startup():
     scheduler.add_job(apscheduler.send_message_time, trigger='date',
                       run_date=datetime.now() + timedelta(seconds=10))
     '''
-    scheduler.add_job(apscheduler.daily_message, trigger='cron',
-                      hour=0, minute=0, start_date=datetime.now())
+    scheduler.remove_all_jobs()
+    scheduler.add_job(apscheduler.daily_message, trigger='cron', day='*',
+                      hour=0, minute=0, id='daily')
     scheduler.start()
+    scheduler.print_jobs()
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 async def on_shutdown():
