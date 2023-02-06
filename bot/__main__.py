@@ -41,7 +41,7 @@ async def on_startup():
                       hour=0, minute=30)
     scheduler.start()
     scheduler.remove_all_jobs()
-    app_logger.warning(scheduler.schedget_jobs())
+    scheduler.print_jobs(out='123.txt')
     await bot.send_message(1502268714, "<b>✅ Бот запущен</b>")
 
 async def on_shutdown():
@@ -49,7 +49,8 @@ async def on_shutdown():
 
     await bot.delete_webhook()
     await dp.storage.close()
-
+    scheduler.shutdown(wait=False)
+    
     await bot.send_message(1502268714, "<b>✅ Бот остановлен</b>")
     app_logger.warning('Bye!')
 
