@@ -1,12 +1,15 @@
 [Unit]
-Description=Telegram Bot
+Description=TG Bot
 Requires=tg_captcha.service
+Requires=tg_payments.service
 
 [Service]
+VIRTUAL_ENV=/root/bots/aiogram_template/venv
+Environment=PATH=$VIRTUAL_ENV/bin:$PATH
 WorkingDirectory=/root/bots/aiogram_template
 User=root
-ExecStart=python3 -m bot
-Restart=on-failure
+ExecStart=/root/bots/aiogram_template/venv/bin/python3 -m bot
+#Restart=on-failure
 
 [Install]
 WantedBy=multiuser.target

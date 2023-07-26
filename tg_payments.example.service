@@ -1,6 +1,6 @@
 [Unit]
 Description=TG Captcha Bot
-Requires=tg_payments.service
+Requires=tg_captcha.service
 Requires=tg_bot.service
 
 [Service]
@@ -8,7 +8,7 @@ VIRTUAL_ENV=/root/bots/aiogram_template/venv
 Environment=PATH=$VIRTUAL_ENV/bin:$PATH
 WorkingDirectory=/root/bots/aiogram_template
 User=root
-ExecStart=/root/bots/aiogram_template/venv/bin/python3 -m captcha
+ExecStart=/root/bots/aiogram_template/venv/bin/python3 -m payments
 #Restart=on-failure
 
 [Install]
