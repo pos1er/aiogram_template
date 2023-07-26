@@ -1,5 +1,5 @@
 from typing import Coroutine, Union
-from mongodb.mongodb import admins, users, user_id, db_data
+from bot.mongodb.mongodb import admins, users, user_id, db_data
 
 from bot.loader import bot
 

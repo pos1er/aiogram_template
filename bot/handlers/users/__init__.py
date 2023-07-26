@@ -1,7 +1,6 @@
 from aiogram import Router
 from bot.filters.captcha_passed import CaptchaPassed
 
-from bot.filters.is_channel_sub import IsChannelSub
 from bot.filters.language_choosen import LanguageChoosen
 from bot.filters.private_chat import IsPrivate
 
@@ -15,5 +14,5 @@ language_router.include_router(captcha_router)
 language_router.include_router(lang_router)
 
 language_router.message.filter(IsPrivate())
-users_router.message.filter(LanguageChoosen(), IsChannelSub(), IsPrivate(), CaptchaPassed())
-users_router.callback_query.filter(LanguageChoosen(), IsChannelSub(), CaptchaPassed())
+users_router.message.filter(LanguageChoosen(), IsPrivate(), CaptchaPassed())
+users_router.callback_query.filter(LanguageChoosen(), CaptchaPassed())

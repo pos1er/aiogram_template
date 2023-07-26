@@ -19,7 +19,7 @@ from bot.mongodb.admin_keyboards import admin_main_menu, admin_settings_menu
 from bot.mongodb.utils import get_id_database
 from bot.states.admin import AdminSettings, AdminStates
 from bot.utils.workdir import WORKDIR
-from mongodb.gettings import get_language
+from bot.mongodb.gettings import get_language
 
 
 any_admin_router = Router()

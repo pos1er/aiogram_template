@@ -8,7 +8,7 @@ from aiogram.types import InputMediaPhoto, InputMediaVideo
 
 from bot.data.config import DEFAULT_LANGUAGE
 from bot.loader import bot
-from mongodb.mongodb import counters, db_data, admins
+from bot.mongodb.mongodb import counters, db_data, admins
 
 
 async def get_accept_languages() -> List[str]:

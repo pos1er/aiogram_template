@@ -4,7 +4,7 @@ from aiogram.utils.i18n import gettext as _
 from dacite import from_dict
 from bot.mongodb.gettings import booking_status, captcha_status, tm_status
 
-from mongodb.mongodb import admins, user_id
+from bot.mongodb.mongodb import admins, user_id
 from bot.data.admins import AdminRights
 
 

@@ -1,7 +1,7 @@
 from bot.data.config import DEFAULT_LANGUAGE
 from bot.mongodb.admins import add_admin
-from mongodb.mongodb import users, user_id, username, full_name, admins_requests
-from mongodb.utils import get_id_database
+from bot.mongodb.mongodb import users, user_id, username, full_name, admins_requests
+from bot.mongodb.utils import get_id_database
 import time
 
 

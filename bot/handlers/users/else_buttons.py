@@ -8,7 +8,6 @@ from aiogram.utils.i18n import get_i18n
 from aiogram.filters.command import Command
 from aiogram import F
 from bot.filters.captcha_passed import CaptchaPassed
-from bot.filters.is_channel_sub import IsChannelSub
 from bot.filters.language_choosen import LanguageChoosen
 from bot.filters.private_chat import IsPrivate
 
@@ -19,8 +18,8 @@ from bot.mongodb.user_keyboards import get_languages_menu
 from bot.states.user import ProfileStates
 
 else_buttons_router = Router()
-else_buttons_router.message.filter(IsChannelSub(), IsPrivate(), CaptchaPassed(), LanguageChoosen())
-else_buttons_router.callback_query.filter(IsChannelSub(), CaptchaPassed(), LanguageChoosen())
+else_buttons_router.message.filter(IsPrivate(), CaptchaPassed(), LanguageChoosen())
+else_buttons_router.callback_query.filter(CaptchaPassed(), LanguageChoosen())
 
 
 @else_buttons_router.message(Command("language"))

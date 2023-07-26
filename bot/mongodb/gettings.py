@@ -1,6 +1,6 @@
 import datetime
 from typing import List
-from mongodb.mongodb import db_data, admins, users, admins_requests
+from bot.mongodb.mongodb import db_data, admins, users, admins_requests
 
 
 async def get_faq():

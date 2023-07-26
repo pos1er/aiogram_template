@@ -10,8 +10,8 @@ from bot.data.payments import BalanceCryptobot, BalanceCrystalpay, BalancePayid1
 
 from bot.mongodb.utils import cryptocurrencies_price, int_to_asset
 from bot.data.config import BASE_URL
-from mongodb.utils import get_id_database, get_bot_username
-from mongodb.mongodb import payments, db_data, users, withdraws_db
+from bot.mongodb.utils import get_id_database, get_bot_username
+from bot.mongodb.mongodb import payments, db_data, users, withdraws_db
 
 
 class Payments:

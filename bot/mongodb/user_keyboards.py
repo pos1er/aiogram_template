@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.utils.i18n import gettext as _
 
-from mongodb.mongodb import db_data
+from bot.mongodb.mongodb import db_data
 
 
 async def get_languages_menu(no_exit=False) -> InlineKeyboardMarkup:

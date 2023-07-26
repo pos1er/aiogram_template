@@ -1,6 +1,6 @@
 import datetime
 from bot.mongodb.utils import get_id_database
-from mongodb.mongodb import admins, db_data, user_id
+from bot.mongodb.mongodb import admins, db_data, user_id
 import time
 
 
