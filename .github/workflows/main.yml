@@ -20,6 +20,5 @@ jobs:
             cd /root/bots/aiogram_template
             git checkout .
             git pull
-            pip3 install -r requirements.txt
-            pybabel compile -d bot/locales -D messages
+            /root/bots/aiogram_template/venv/bin/pip3 install -r requirements.txt
             systemctl restart tg_bot

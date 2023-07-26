@@ -21,8 +21,8 @@ class CaptchaService:
         self._captcha_duration = captcha_duration
         self._captcha_generator = captcha_generator
 
-    async def generate_captcha(self) -> CaptchaData:
-        return await self._captcha_generator.generate_captcha_data()
+    async def generate_captcha(self, language: str = 'ru') -> CaptchaData:
+        return await self._captcha_generator.generate_captcha_data(language=language)
 
     async def get_captcha_result_image(self, status: CaptchaResultStatus) -> BytesIO:
         filename = f"captcha_{status.value}"

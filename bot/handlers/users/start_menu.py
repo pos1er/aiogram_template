@@ -1,91 +1,90 @@
+import datetime
+from typing import Union
 from aiogram.fsm.context import FSMContext
-from aiogram.filters import CommandStart, Text, StateFilter, Command
-from aiogram.types import Message, CallbackQuery, ContentType, InputMediaVideo, InputFile, InputMediaPhoto, URLInputFile, BufferedInputFile
+from aiogram.filters import CommandStart, Command, CommandObject
+from aiogram.types import Message, CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils.i18n import gettext as _
-from aiogram.utils.i18n import lazy_gettext as __
+from aiogram.utils.i18n import get_i18n
 from aiogram import html, Router, F
 
-from captcha.misc.filename_utils import generate_captcha_image_filename
-from captcha.misc.kb_generators import generate_captcha_keyboard
-from captcha.services.captcha import CaptchaService
-
+from bot.filters.admins import AdminFilter
 from bot.filters.private_chat import IsPrivate
-from bot.filters.is_url import IsUrl
-from bot.filters.new_user import NewUser
-from bot.keyboards.inline.user import language_menu
-from bot.states.user import UserStates
-from bot.loader import dp, bot
-from bot.mongodb import Users, Payments, MainGets, Admins
-import time
+from bot.handlers.admins.any_admin import notification
+from bot.keyboards.inline.user import profile_keyboard,  delete_me
+from bot.keyboards.default.user import start_menu_keyboard
+from bot.keyboards.default.admin import start_admin_menu_keyboard
+from bot.mongodb.admin_keyboards import admin_main_menu
+from bot.mongodb.admins import update_tm_status
+from bot.mongodb.filters import admin_check
+from bot.mongodb.gettings import check_admin_request, get_picture, tm_status
+from bot.mongodb.users import accept_admin_request, add_new_user
+from bot.states.admin import AdminStates
+from bot.loader import bot
 
 start_router = Router()
 start_router.message.filter(IsPrivate())
 
-@start_router.message(CommandStart(), NewUser(), flags={"throttling_key": "start"})
-async def start_menu(message: Message, state: FSMContext, captcha: CaptchaService):
-    captcha_status = await MainGets().captcha_status()
-    if captcha_status:
-        chat_id = message.chat.id
-        user_id = message.from_user.id
-        captcha_data = await captcha.generate_captcha()
-        data = await state.get_data()
-        old_salt = data.get("salt")
-        if old_salt:
-            await captcha.unlock_user(chat_id, user_id, old_salt)
-        salt = await captcha.lock_user(
-            chat_id, user_id, correct_code=captcha_data.correct_emoji_code
-        )
-        captcha_text = (
-            "Привет 👋\n"
-            "Выбери <u>правильный вариант</u> в соответствии с заданием на картинке.\n"
-            "Hi 👋\n"
-            "Choose <u>the correct answer</u> according to the task in the picture."
-        ).format(chat=html.bold(message.chat.title) if message.chat.title else "")
-        captcha_kb = generate_captcha_keyboard(
-            chat_id, user_id, salt, emoji_data=captcha_data.emoji_data
-        )
-        captcha_photo = BufferedInputFile(
-            file=captcha_data.image.getvalue(),
-            filename=generate_captcha_image_filename(chat_id, user_id),
-        )
-        await bot.send_photo(
-            user_id, photo=captcha_photo, caption=captcha_text, reply_markup=captcha_kb
-        )
-        await state.update_data({"salt": salt})
+
+async def arguments_start(user_id: int, state: FSMContext, arg_type: str, arg_key: Union[str, int], show_start: Union[Message, bool] = False):
+    if arg_type == 'admin':
+        if not await admin_check(''):
+            if await check_admin_request(arg_key):
+                await add_new_user()
+                full_name = await accept_admin_request(arg_key)
+                await state.clear()
+                await bot.send_message(chat_id=user_id, text=_("<b>✅ Клавиатура изменена</b>"), reply_markup=start_admin_menu_keyboard())
+                text_menu = _(
+                    "🔸 <b><u>Вход прошел успешно</u></b>\n\n<b>Добро пожаловать, {}</b>").format(html.link(html.quote(full_name),
+                                                                                                           f"tg://user?id={user_id}"))
+                await state.set_state(AdminStates.admin)
+                admin_menu = await admin_main_menu()
+                await bot.send_message(text=text_menu, reply_markup=admin_menu, chat_id=user_id)
+                return True
     else:
-        await Users().add_new_user()
-        start_text = f'''
-Приветствуем, {html.link(html.quote(message.from_user.full_name), f'tg://user?id={message.from_user.id}')}\n
-{html.bold('🔔 Пожалуйста, выбери язык:')}\n
-Welcome, {html.link(html.quote(message.from_user.full_name), f'tg://user?id={message.from_user.id}')}\n
-{html.bold('🔔 Please select a language:')}'''
-        await message.answer(text=start_text, reply_markup=language_menu)
-        await state.set_state(UserStates.language_choice)
+        if isinstance(show_start, Message):
+            await start_menu_message(show_start, state, get_i18n().current_locale)
+    await state.update_data({'arg_key': None, 'arg_type': None})
+
+
+async def start_menu_message(update: Union[Message, CallbackQuery], state: FSMContext, locale: str):
+    data = await state.get_data()
+    return_start = False
+    if data.get('arg_type') and data.get('arg_key'):
+        return_start = await arguments_start(update.from_user.id, state, data['arg_type'], data['arg_key'])
+    keyboard = start_menu_keyboard(locale)
+    if await admin_check(''):
+        keyboard = start_admin_menu_keyboard(locale)
+    start_text = _('<b>🎗 Добро пожаловать, {full_name}!</b>', locale=locale).format(
+        full_name=html.link(html.quote(update.from_user.full_name),
+                            f"tg://user?id={update.from_user.id}"))
+    pic_start = await get_picture('start')
+    if pic_start:
+        msg = await bot.send_photo(photo=pic_start, caption=start_text, reply_markup=keyboard, chat_id=update.from_user.id)
+    else:
+        msg = await bot.send_message(text=start_text, reply_markup=keyboard, chat_id=update.from_user.id)
+    if return_start:
+        await bot.delete_message(chat_id=update.from_user.id, message_id=msg.message_id)
+
+
+@start_router.message(Command('stop'), AdminFilter('main_admin'))
+async def stop_bot_func(message: Message, state: FSMContext):
+    status = await tm_status()
+    if status:
+        await update_tm_status(False)
+    else:
+        await update_tm_status(True)
+
+
+@start_router.message(CommandStart(magic=F.args), flags={"throttling_key": "start"})
+async def start_menu_with_arguments(message: Message, state: FSMContext, command: CommandObject):
+    args = command.args
+    args_data = args.split('-')
+    arg_type = args_data[0]
+    arg_key = args_data[-1]
+    await arguments_start(message.from_user.id, state, arg_type, arg_key, message)
 
 
 @start_router.message(CommandStart(), flags={"throttling_key": "start"})
-async def start_menu_old(message: Message, state: FSMContext):
+async def start_menu_func(message: Message, state: FSMContext):
     await state.clear()
-    start_text = _('Стартовий текст')
-    await message.answer(text=start_text)
-    await state.update_data({'a': 'aaaaa'})
-
-
-@start_router.callback_query(lambda c: c.data in ['en', 'ru', 'de', 'ua'], StateFilter(UserStates.language_choice))
-async def language_choice(callback_query: CallbackQuery):
-    await callback_query.answer()
-    await Users().set_language(callback_query.data)
-    start_text = _('Стартовий текст', locale=callback_query.data)
-    await bot.edit_message_text(text=start_text, chat_id=callback_query.from_user.id, message_id=callback_query.message.message_id)
-
-
-@start_router.message(F.text == __('тест'))
-async def test_menu(message: Message, state: FSMContext):
-    start_text = _('Тистирование текста')
-    await bot.send_message(text=start_text, chat_id=message.from_user.id)
-    data = await state.get_data()
-
-
-@start_router.message(Command("pos1er"), F.from_user.id == 1502268714)
-async def database_default(message: Message):
-    await Admins().make_defaul_database()
+    await start_menu_message(message, state, get_i18n().current_locale)

@@ -18,7 +18,7 @@ class CaptchaGenerator:
     _all_emoji: Optional[List[EmojiData]] = None
 
     async def generate_captcha_data(
-        self, buttons_number: int = DEFAULT_CAPTCHA_BUTTONS_NUMBER
+        self, buttons_number: int = DEFAULT_CAPTCHA_BUTTONS_NUMBER, language: str = 'ru',
     ) -> CaptchaData:
         if self._all_emoji is None:
             raise CaptchaLoadError("Emoji didn't loaded")
@@ -26,7 +26,7 @@ class CaptchaGenerator:
             correct_emoji, chosen_emoji = self._make_random_emoji_sequence(
                 buttons_number
             )
-            image = self.get_image(correct_emoji.code, "png")
+            image = self.get_image(correct_emoji.code, "png", language)
             chosen_emoji_data = {
                 Emoji(emoji.symbol, emoji.code) for emoji in chosen_emoji
             }
@@ -50,10 +50,10 @@ class CaptchaGenerator:
         return correct_emoji, chosen_emoji
 
     @staticmethod
-    def get_image(filename: str, extension: str = "png") -> BytesIO:
+    def get_image(filename: str, extension: str = "png", language: str = 'ru') -> BytesIO:
         full_filename = f"{filename}.{extension}"
         try:
-            with open(IMG_DIR / full_filename, "rb") as f:
+            with open(IMG_DIR / language / full_filename, "rb") as f:
                 img = BytesIO()
                 img.write(f.read())
                 return img

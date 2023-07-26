@@ -4,7 +4,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-mongodb_url = str(os.getenv("MONGODB_LINK"))
+MONGODB_URL = str(os.getenv("MONGODB_LINK"))
+
+MAIN_ADMIN_ID = int(os.getenv("MAIN_ADMIN_ID"))
 
 MAIN_TOKEN = str(os.getenv("MAIN_TOKEN"))
 
@@ -14,10 +16,18 @@ CAPTCHA_DURATION = int(os.getenv("CAPTCHA_DURATION"))
 
 REDIS_URL = str(os.getenv("REDIS_URL"))
 
-crystal_pay_key = str(os.getenv("CRYSTAL_PAY_KEY"))
+CRYSTAL_PAY_KEY = str(os.getenv("CRYSTAL_PAY_KEY"))
 
-public_key_payid19 = str(os.getenv("PUBLIC_KEY_PAYID19"))
+PUBLIC_KEY_PAYID19 = str(os.getenv("PUBLIC_KEY_PAYID19"))
 
-private_key_payid19 = str(os.getenv("PRIVATE_KEY_PAYID19"))
+PRIVATE_KEY_PAYID19 = str(os.getenv("PRIVATE_KEY_PAYID19"))
 
-crypto_bot_key = str(os.getenv("CRYPTO_BOT_KEY"))
+CRYPTO_BOT_KEY = str(os.getenv("CRYPTO_BOT_KEY"))
+
+WEB_SERVER_PORT = int(os.getenv("WEB_SERVER_PORT"))
+
+BOT_PATH = str(os.getenv("BOT_PATH"))
+
+TESTING_BOT = int(os.getenv("TESTING_BOT"))
+
+DEFAULT_LANGUAGE = str(os.getenv("DEFAULT_LANGUAGE"))

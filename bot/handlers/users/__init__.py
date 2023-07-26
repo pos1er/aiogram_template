@@ -1,9 +1,19 @@
 from aiogram import Router
+from bot.filters.captcha_passed import CaptchaPassed
+
+from bot.filters.is_channel_sub import IsChannelSub
+from bot.filters.language_choosen import LanguageChoosen
+from bot.filters.private_chat import IsPrivate
 
 from .captcha_answer import captcha_router
-from .start_menu import start_router
+from .language_start import lang_router
 
+language_router = Router()
 users_router = Router()
 
-users_router.include_router(captcha_router)
-users_router.include_router(start_router)
+language_router.include_router(captcha_router)
+language_router.include_router(lang_router)
+
+language_router.message.filter(IsPrivate())
+users_router.message.filter(LanguageChoosen(), IsChannelSub(), IsPrivate(), CaptchaPassed())
+users_router.callback_query.filter(LanguageChoosen(), IsChannelSub(), CaptchaPassed())

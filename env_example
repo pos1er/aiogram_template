@@ -1,9 +1,26 @@
+# main settings
 MAIN_TOKEN=5555555555:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+MAIN_ADMIN_ID=1502268714
+DEFAULT_LANGUAGE=ru
+
+# your mongodb link
 MONGODB_LINK=mongodb+srv://login:password@database.mongodb.net/test?retryWrites=true&w=majority
+
+# payment keys
 CRYSTAL_PAY_KEY=key from crystalpay
 PUBLIC_KEY_PAYID19=public key from payid19
 PRIVATE_KEY_PAYID19=private key from payid19
 CRYPTO_BOT_KEY=key from cryptobot(pay)
-BASE_URL=https://domain.com
+
+# captcha settings
 CAPTCHA_DURATION=30
+
+# server settings
 REDIS_URL=redis://localhost:6379/0
+BASE_URL=https://domain.com
+WEB_SERVER_PORT=7771
+BOT_PATH=test_bot
+
+# 1 for long pulling and memorystorage
+# 0 for webhooks and redisstorage
+TESTING_BOT=1

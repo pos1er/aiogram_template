@@ -1,5 +1,5 @@
 from aiogram import Bot
-from bot.mongodb import MainGets
+from bot.mongodb.gettings import get_admins_list
 from bot.utils.loggers import app_logger
 
 
@@ -27,7 +27,7 @@ async def send_message_interval(bot: Bot):
 
 
 async def daily_message(bot: Bot):
-    admins_list = await MainGets().get_admins_list('notifications.daily')
+    admins_list = await get_admins_list('notifications.daily')
     app_logger.warning(admins_list)
     for admin in admins_list:
         await bot.send_message(admin['user_id'], text='Это сообщение будет отправляться ежедневно в указанное время')

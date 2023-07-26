@@ -1,4 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.i18n import gettext as _
 
 language_menu = InlineKeyboardMarkup(inline_keyboard=[
     [
@@ -12,8 +13,25 @@ language_menu = InlineKeyboardMarkup(inline_keyboard=[
     ],
 ])
 
-delete_me = InlineKeyboardMarkup(inline_keyboard=[
-    [
-        InlineKeyboardButton(text="❌ Закрыть", callback_data="delete_me")
-    ]
-])
+
+def delete_me():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text=_("❌ Закрыть"), callback_data="delete_me")
+        ]
+    ])
+
+
+def profile_keyboard(_, user_language=None):
+    if not user_language:
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text=_("💻 Профиль"), callback_data="profile_all")
+            ]
+        ])
+    else:
+        return InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text=_("💻 Профиль", locale=user_language), callback_data="profile_all")
+            ]
+        ])

@@ -12,3 +12,8 @@ Babel
 PyBabel
 apscheduler
 apscheduler_di
+uvicorn
+fastapi
+hashlib
+dacite
+python-dateutil
