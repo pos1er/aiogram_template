@@ -64,7 +64,7 @@ async def on_shutdown():
     app_logger.warning('Bye!')
 
 
-def main():
+def configure_dp():
     configure_logging()
 
     dp.startup.register(on_startup)
@@ -86,7 +86,10 @@ def main():
     dp.callback_query.outer_middleware(MyI18nMiddleware(i18n=i18n))
     
     dp.include_router(router)
+    return dp
 
+def main():
+    dp = configure_dp()
     if TESTING_BOT:
         dp.run_polling(bot)
     else:
